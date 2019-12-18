@@ -162,6 +162,29 @@ Smoke.add_test(
 )
 
 Smoke.add_test(
+  'with_plugins_2',
+  guid: 'test-guid',
+  timestamp: :_,
+  type: 'success',
+  issues: [
+    {
+      path: "foo.py",
+      location: {
+        start_line: 2
+      },
+      id: "A001",
+      message: '"id" is a python builtin and is being shadowed, consider renaming the variable',
+      links: [],
+      object: nil,
+    }
+  ],
+  analyzer: {
+    name: "Flake8",
+    version: "3.7.9"
+  }
+)
+
+Smoke.add_test(
   'with_output_options',
   guid: 'test-guid',
   timestamp: :_,

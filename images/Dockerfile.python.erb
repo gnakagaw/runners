@@ -1,16 +1,9 @@
 <% analyzer = ENV.fetch('ANALYZER') %>
 # Install the default version
-COPY --chown=<%= ENV.fetch("RUNNER_CHOWN") %> images/<%= analyzer %>/Pipfile ${RUNNER_USER_HOME}/<%= analyzer %>_Pipfile
-RUN cd ${RUNNER_USER_HOME} && \
-    mkdir <%= analyzer %> && \
-    mv <%= analyzer %>_Pipfile <%= analyzer %>/Pipfile && \
-    cd <%= analyzer %> && \
-    for version in "${PYTHON2_VERSION}" "${PYTHON3_VERSION}"; do \
-      pyenv global ${version} && \
-      pipenv install --system --skip-lock && \
-      pyenv rehash && \
-      echo "In '$(python --version 2>&1)', the version of the analyzer '<%= analyzer %>' is ..." && \
-      <%= analyzer %> --version && \
-      : ; \
-    done && \
-    echo "The default Python runtime version is '$(python --version)'"
+COPY images/<%= analyzer %>/Pipfile /tmp/<%= analyzer %>/Pipfile
+USER root
+RUN cd /tmp/<%= analyzer %> && \
+    pipenv install --system --skip-lock && \
+    cd .. && \
+    rm -rf /tmp/<%= analyzer %> && \
+    <%= analyzer %> --version

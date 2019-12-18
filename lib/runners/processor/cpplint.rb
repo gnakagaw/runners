@@ -1,5 +1,7 @@
 module Runners
   class Processor::Cpplint < Processor
+    include Python
+
     Schema = StrongJSON.new do
       let :runner_config, Schema::RunnerConfig.base.update_fields { |fields|
         fields.merge!({

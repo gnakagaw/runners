@@ -1,7 +1,27 @@
-FROM sider/devon_rex_python:2.11.0
+FROM sider/devon_rex_python:dev
 
 <%= render_erb 'images/Dockerfile.base.erb' %>
 <%= render_erb 'images/Dockerfile.python.erb' %>
+
+# TODO: Python 2 will be unsupported in January 2020. Then, this hack should be unnecessary.
+# Install Python 2 via pyenv
+USER $RUNNER_USER
+ENV PATH ${RUNNER_USER_HOME}/.pyenv/shims:${RUNNER_USER_HOME}/.pyenv/bin:${PATH}
+ENV PYTHON2_VERSION 2.7.16
+COPY --chown=<%= ENV.fetch("RUNNER_CHOWN") %> images/flake8/Pipfile /tmp/flake8/
+RUN cd /tmp/flake8 && \
+    curl -fsSL https://pyenv.run | bash && \
+    PATH="${RUNNER_USER_HOME}/.pyenv/shims:${RUNNER_USER_HOME}/.pyenv/bin:${PATH}" && \
+    pyenv install ${PYTHON2_VERSION} && \
+    pyenv global ${PYTHON2_VERSION} && \
+    pip install --upgrade pip && \
+    pip install pipenv && \
+    pipenv install --system --skip-lock && \
+    pyenv rehash && \
+    pyenv which flake8 && \
+    pyenv global system && \
+    pyenv versions && \
+    rm -rf /tmp/flake8
 
 COPY --chown=<%= ENV.fetch("RUNNER_CHOWN") %> images/flake8/sider_config.ini ${RUNNER_USER_HOME}/.config/flake8
 COPY --chown=<%= ENV.fetch("RUNNER_CHOWN") %> images/flake8/ignored-config.ini ${RUNNER_USER_HOME}/.config/ignored-config.ini

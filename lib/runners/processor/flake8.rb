@@ -28,12 +28,21 @@ module Runners
 
     def analyze(changes)
       ensure_runner_config_schema(Schema.runner_config) do |config|
-        capture3! 'pyenv', 'global', detected_python_version(config)
-        capture3! "python", "--version" # NOTE: `show_runtime_versions` does not work...
-        capture3! "pip", "--version"
+        set_python2 if use_python2?(config)
+        unset_pyenv_local
+        show_python_runtime_versions
         prepare_plugins(config)
         run_analyzer
       end
+    end
+
+    def show_runtime_versions
+      # NOTE: Prevent such error: "pyenv: version `2.7.0' is not installed"
+    end
+
+    def show_python_runtime_versions
+      capture3! "python", "--version"
+      capture3! "pip", "--version"
     end
 
     private
@@ -51,51 +60,35 @@ module Runners
     def prepare_plugins(config)
       if config[:plugins]
         plugins = Array(config[:plugins]).flatten
-        capture3!('pip', 'install', *plugins)
+        capture3!('pip', 'install', '--user', *plugins)
       end
     end
 
-    def detected_python_version(config)
-      [
-        specified_python_version(config),
-        specified_python_version_via_pyenv,
-        python3_version
-      ].compact.first
+    def use_python2?(config)
+      if config[:version]&.to_i == 2
+        return true
+      end
+
+      dot_python_version = current_dir / '.python-version'
+      if dot_python_version.exist? && dot_python_version.read.start_with?('2')
+        trace_writer.message '".python-version" file is detected. Use Python 2.'
+        return true
+      end
+
+      false
     end
 
-    def specified_python_version(config)
-      case config[:version]&.to_i
-      when 2
-        python2_version
-      when 3
-        python3_version
-      end
+    def set_python2
+      capture3! "pyenv", "global", ENV.fetch("PYTHON2_VERSION")
     end
 
-    def specified_python_version_via_pyenv
-      python_version = Pathname(current_dir + '.python-version')
-      if python_version.exist?
-        version = if python_version.read.start_with? '2'
-                    python2_version
-                  else
-                    python3_version
-                  end
-        # Delete .python-version not to run Python that is not installed.
-        python_version.delete
-        return version
-      end
+    # NOTE: Prevent pyenv local setting's effect.
+    def unset_pyenv_local
+      capture3! "pyenv", "local", "--unset"
     end
 
     def ignored_config_path
       (Pathname(Dir.home) / '.config/ignored-config.ini').realpath
-    end
-
-    def python2_version
-      @python2_version ||= capture3!('pyenv', 'versions', '--bare').first.match(/^2[0-9\.]+$/m).to_s
-    end
-
-    def python3_version
-      @python3_version ||= capture3!('pyenv', 'versions', '--bare').first.match(/^3[0-9\.]+$/m).to_s
     end
 
     def parse_result(output)
