@@ -192,3 +192,46 @@ Smoke.add_test(
     analyzer: {name: "golangci-lint", version: "1.22.2"}
   }
 )
+
+# Smoke.add_test(
+#   "uniq-by-line",
+#   {
+#     guid: "test-guid",
+#     timestamp: :_,
+#     type: "success",
+#     issues: [
+#       {
+#         path: "sample.go",
+#         location: {start_line: 8},
+#         id: "unused",
+#         message: "var `unused` is unused",
+#         links: [],
+#         object: nil,
+#         git_blame_info: nil
+#       },
+#     ],
+#     analyzer: {name: "golangci-lint", version: "1.22.2"}
+#   }
+# )
+
+Smoke.add_test(
+  "tests",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "sample_test.go",
+        location: {start_line: 8},
+        id: "unused",
+        message: "var `unused` is unused",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+    ],
+    analyzer: {name: "golangci-lint", version: "1.22.2"}
+  }
+)
+

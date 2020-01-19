@@ -1,0 +1,3 @@
+linter:
+  golangci-lint:
+    uniq-by-line: false

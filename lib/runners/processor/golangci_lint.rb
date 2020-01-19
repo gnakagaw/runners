@@ -10,7 +10,15 @@ module Runners
                         disable: enum?(string, array(string)),
                         'disable-all': boolean?,
                         enable: enum?(string, array(string)),
-                        timeout: numeric?
+                        fast: boolean?,
+                        'no-config': boolean?,
+                        presets: enum?(string, array(string)),
+                        'skip-dirs': enum?(string, array(string)),
+                        'skip-dirs-use-default': boolean?,
+                        'skip-file': enum?(string, array(string)),
+                        tests: boolean?,
+                        timeout: numeric?,
+                        'uniq-by-line': boolean?,
                       })
       }
 
@@ -85,6 +93,10 @@ module Runners
         if stderr.include?("can't combine options --disable-all and --disable")
           return Results::Failure.new(guid: guid, analyzer: analyzer, message: "can't combine options --disable-all and --disable")
         end
+
+        if stderr.include?("only next presets exist")
+          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Only next presets exist: (bugs|complexity|format|performance|style|unused")
+        end
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
       end
 
@@ -129,6 +141,8 @@ module Runners
         end
 
         opts << "--disable-all" if config[:'disable-all']
+        opts << "--uniq-by-line" if config[:'uniq-by-line']
+        opts << "--tests=#{tests}" if config[:tests]
       end
     end
 
@@ -150,6 +164,7 @@ module Runners
     #
     # @see https://github.com/hadolint/hadolint#rules
     # @param stdout [String]
+    # TODO how to handle replacement
     def parse_result(stdout)
       JSON.parse(stdout, symbolize_names: true)[:Issues].map do |file|
         path = relative_path(file[:Pos][:Filename])
@@ -163,7 +178,6 @@ module Runners
           id: id,
           message: file[:Text],
           links: [],
-          object: nil
         )
       end
     end
