@@ -15,7 +15,7 @@ RUN cd ${RUNNERS_DIR} && \
     bundle config && \
     bundle install
 
-ARG LINT_TOOL_VERSION="1.22.2"
+ARG LINT_TOOL_VERSION="1.23.1"
 
 USER root
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v${LINT_TOOL_VERSION}

@@ -95,7 +95,11 @@ module Runners
         end
 
         if stderr.include?("only next presets exist")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Only next presets exist: (bugs|complexity|format|performance|style|unused")
+          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Only next presets exist: (bugs|complexity|format|performance|style|unused)")
+        end
+
+        if stderr.include?("no such linter")
+          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No such linter")
         end
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
       end
@@ -108,7 +112,7 @@ module Runners
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No go files to analyze")
       end
 
-      # TODO Could not find the condition yet
+      # `6` will be returned when execute 'golangci-lint config path.
       if status.exitstatus == 6
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
       end
@@ -129,8 +133,9 @@ module Runners
         analysis_targets.each do |target|
           opts << target
         end
-        opts << "--config=#{config[:config]}" if config[:config]
         opts << "--out-format=json"
+        opts << "--tests=false" if config[:tests] == false
+        opts << "--config=#{config[:config]}" if config[:config]
         opts << "--timeout=#{config[:timeout]}" if config[:timeout]
 
         Array(config[:disable]).each do |disable|
@@ -139,10 +144,12 @@ module Runners
         Array(config[:enable]).each do |enable|
           opts << "--enable=#{enable}"
         end
+        Array(config[:presets]).each do |preset|
+          opts << "--presets=#{preset}"
+        end
 
         opts << "--disable-all" if config[:'disable-all']
-        opts << "--uniq-by-line" if config[:'uniq-by-line']
-        opts << "--tests=#{tests}" if config[:tests]
+        opts << "--uniq-by-line=false" if config[:'uniq-by-line'] == false
       end
     end
 
