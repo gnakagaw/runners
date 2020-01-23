@@ -101,6 +101,10 @@ module Runners
         if stderr.include?("no such linter")
           return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No such linter")
         end
+        if stderr.include?("can't combine option --config and --no-config")
+          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't combine option --config and --no-config")
+        end
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
       end
 
@@ -148,8 +152,17 @@ module Runners
           opts << "--presets=#{preset}"
         end
 
-        opts << "--disable-all" if config[:'disable-all']
+        opts << "--disable-all" if config[:'disable-all'] == true
         opts << "--uniq-by-line=false" if config[:'uniq-by-line'] == false
+        opts << "--no-config=true" if config[:'no-config'] == true
+        opts << "--skip-dirs-use-default=false" if config[:'skip-dirs-use-default'] == false
+
+        Array(config[:'skip-dirs']).each do |dir|
+          opts << "--skip-dirs=#{dir}"
+        end
+        Array(config[:'skip-files']).each do |file|
+          opts << "--skip-files=#{file}"
+        end
       end
     end
 

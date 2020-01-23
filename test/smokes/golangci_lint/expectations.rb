@@ -85,6 +85,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
+        location: {start_line: 17},
+        id: "lll",
+        message: "line is 188 characters",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+      {
+        path: "sample.go",
         location: {start_line: 11},
         id: "structcheck",
         message: "`birthDay` is unused",
@@ -232,16 +241,16 @@ Smoke.add_test(
   }
 )
 
-# Smoke.add_test(
-#   "tests",
-#   {
-#     guid: "test-guid",
-#     timestamp: :_,
-#     type: "success",
-#     issues: [],
-#     analyzer: {name: "golangci-lint", version: "1.23.1"}
-#   }
-# )
+Smoke.add_test(
+  "tests",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [],
+    analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
 
 Smoke.add_test(
   "no-lint",
@@ -307,3 +316,54 @@ Smoke.add_test(
   }
 )
 
+Smoke.add_test(
+  "no-config",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [],
+   analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
+
+Smoke.add_test(
+  "config_and_noconfig",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "failure",
+    message: "Can't combine option --config and --no-config",
+    analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
+
+Smoke.add_test(
+  "skip-dirs-use-default",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "sample.go",
+        location: {start_line: 9},
+        id: "errcheck",
+        message: "Error return value of `validate` is not checked",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+      {
+        path: "vendor/sample.go",
+        location: {start_line: 9},
+        id: "errcheck",
+        message: "Error return value of `validate` is not checked",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+    ],
+    analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
