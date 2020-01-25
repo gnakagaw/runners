@@ -1,11 +1,11 @@
-package vendor
+package bad
 
 import (
 	"errors"
 	"fmt"
 )
 
-func Bad() {
+func bad() {
 	validate(1)
 }
 

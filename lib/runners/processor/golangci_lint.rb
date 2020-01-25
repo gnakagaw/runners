@@ -5,7 +5,7 @@ module Runners
     Schema = StrongJSON.new do
       let :runner_config, Schema::RunnerConfig.base.update_fields { |fields|
         fields.merge!({
-                        # target: enum?(string, array(string)),
+                        target: enum?(string, array(string)),
                         config: string?,
                         disable: enum?(string, array(string)),
                         'disable-all': boolean?,
@@ -15,9 +15,8 @@ module Runners
                         presets: enum?(string, array(string)),
                         'skip-dirs': enum?(string, array(string)),
                         'skip-dirs-use-default': boolean?,
-                        'skip-file': enum?(string, array(string)),
+                        'skip-files': enum?(string, array(string)),
                         tests: boolean?,
-                        timeout: numeric?,
                         'uniq-by-line': boolean?,
                       })
       }
@@ -27,7 +26,7 @@ module Runners
       )
     end
 
-    DEFAULT_TARGET = "**/*.{go}".freeze
+    DEFAULT_TARGET = "./...".freeze
 
     def self.ci_config_section_name
       # Section name in sideci.yml, Generally it is the name of analyzer tool.
@@ -64,13 +63,10 @@ module Runners
 
     def run_analyzer
       stdout, stderr, status = capture3(analyzer_bin, 'run', *analyzer_options)
-      if status.exitstatus == 0
-        return Results::Success.new(guid: guid, analyzer: analyzer)
-      end
-
-      if status.exitstatus == 1 && stdout && stderr.empty?
+      if (status.exitstatus == 0  || status.exitstatus == 1) && stdout && stderr.empty?
         return Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-          parse_result(stdout).each { |v| result.add_issue(v) }
+          issues = parse_result(stdout)
+          issues.each { |v| result.add_issue(v) } unless issues.nil?
         end
       end
 
@@ -82,34 +78,7 @@ module Runners
       # TODO it may have multiple pattern like illegal path, precondition error, enable and disable the same linter at the same time etc..
       # TODO read code for golangci-lint
       if status.exitstatus == 3
-        if stderr.include?("must enable at least one")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Must enable at least one linter")
-        end
-
-        if stderr.include?("can't be disabled and enabled at one moment")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't be disabled and enabled at one moment")
-        end
-
-        if stderr.include?("can't combine options --disable-all and --disable")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "can't combine options --disable-all and --disable")
-        end
-
-        if stderr.include?("only next presets exist")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Only next presets exist: (bugs|complexity|format|performance|style|unused)")
-        end
-
-        if stderr.include?("no such linter")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No such linter")
-        end
-        if stderr.include?("can't combine option --config and --no-config")
-          return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't combine option --config and --no-config")
-        end
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
-      end
-
-      if status.exitstatus == 4 && stderr.include?("Timeout exceeded")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Timeout exceeded: try increase it by passing --timeout option")
+        return handle_respective_error(stderr)
       end
 
       if status.exitstatus == 5 && stderr.include?("no go files to analyze")
@@ -125,7 +94,34 @@ module Runners
         Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
       end
 
-      Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
+      Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
+    end
+
+    def handle_respective_error(stderr)
+      if stderr.include?("must enable at least one")
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Must enable at least one linter")
+      end
+
+      if stderr.include?("can't be disabled and enabled at one moment")
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't be disabled and enabled at one moment")
+      end
+
+      if stderr.include?("can't combine options --disable-all and --disable")
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "can't combine options --disable-all and --disable")
+      end
+
+      if stderr.include?("only next presets exist")
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Only next presets exist: (bugs|complexity|format|performance|style|unused)")
+      end
+
+      if stderr.include?("no such linter")
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No such linter")
+      end
+      if stderr.include?("can't combine option --config and --no-config")
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't combine option --config and --no-config")
+      end
+      # return Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
+      return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
     end
 
     def config
@@ -138,9 +134,9 @@ module Runners
           opts << target
         end
         opts << "--out-format=json"
+        opts << "--issues-exit-code=0"
         opts << "--tests=false" if config[:tests] == false
         opts << "--config=#{config[:config]}" if config[:config]
-        opts << "--timeout=#{config[:timeout]}" if config[:timeout]
 
         Array(config[:disable]).each do |disable|
           opts << "--disable=#{disable}"
@@ -170,7 +166,7 @@ module Runners
       if config[:target]
         Array(config[:target])
       else
-        Dir.glob(DEFAULT_TARGET, File::FNM_EXTGLOB, base: current_dir)
+        Array(DEFAULT_TARGET)
       end
     end
 
@@ -186,7 +182,10 @@ module Runners
     # @param stdout [String]
     # TODO how to handle replacement
     def parse_result(stdout)
-      JSON.parse(stdout, symbolize_names: true)[:Issues].map do |file|
+      json = JSON.parse(stdout, symbolize_names: true)
+      return if json[:Issues].nil?
+
+      json[:Issues].map do |file|
         path = relative_path(file[:Pos][:Filename])
 
         line = file[:Pos][:Line]

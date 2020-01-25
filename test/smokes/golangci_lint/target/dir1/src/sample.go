@@ -1,15 +1,15 @@
-package vendor
+package dir1
 
 import (
 	"errors"
 	"fmt"
 )
 
-func Bad() {
-	validate(1)
+func AnotherBad() {
+	another(1)
 }
 
-func validate(num int) error {
+func another(num int) error {
 	if num < 0 {
 		return errors.New("error")
 	}

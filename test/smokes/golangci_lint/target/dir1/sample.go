@@ -1,4 +1,4 @@
-package vendor
+package dir1
 
 import (
 	"errors"

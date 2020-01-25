@@ -1,6 +1,36 @@
 Smoke = Runners::Testing::Smoke
 
 Smoke.add_test(
+  "target",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "dir1/sample.go",
+        location: {start_line: 9},
+        id: "errcheck",
+        message: "Error return value of `validate` is not checked",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+      {
+        path: "dir2/src/sample.go",
+        location: {start_line: 9},
+        id: "errcheck",
+        message: "Error return value of `validate` is not checked",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+    ],
+    analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
+
+Smoke.add_test(
   "success",
   {
     guid: "test-guid",
@@ -50,17 +80,6 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Running error",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
-  }
-)
-
-Smoke.add_test(
-  "timeout",
-  {
-    guid: "test-guid",
-    timestamp: :_,
-    type: "failure",
-    message: "Timeout exceeded: try increase it by passing --timeout option",
     analyzer: {name: "golangci-lint", version: "1.23.1"}
   }
 )
@@ -346,7 +365,7 @@ Smoke.add_test(
     type: "success",
     issues: [
       {
-        path: "sample.go",
+        path: "vendor/third_party.go",
         location: {start_line: 9},
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
@@ -354,15 +373,38 @@ Smoke.add_test(
         object: nil,
         git_blame_info: nil
       },
+    ],
+    analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
+
+Smoke.add_test(
+  "skip-files",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [],
+    analyzer: {name: "golangci-lint", version: "1.23.1"}
+  }
+)
+
+Smoke.add_test(
+  "skip-dirs",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
       {
-        path: "vendor/sample.go",
+        path: "src/libs/sample.go",
         location: {start_line: 9},
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
     analyzer: {name: "golangci-lint", version: "1.23.1"}
   }
