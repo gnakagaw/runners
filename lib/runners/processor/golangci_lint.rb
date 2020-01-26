@@ -96,8 +96,8 @@ module Runners
       when /can't combine option --config and --no-config/
        "Can't combine option --config and --no-config"
       else
-        err_message = stderr.match(/level=error msg=(.*)/)
-        err_message[1] ? err_message : "Running Error"
+        msg = stderr.match(/level=error msg=.+\[(.+)\]/)
+        msg && msg[1] ? msg[1] : "Running Error"
       end
     end
 

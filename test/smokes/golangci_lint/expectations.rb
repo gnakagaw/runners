@@ -62,24 +62,13 @@ Smoke.add_test(
   }
 )
 
-# Smoke.add_test(
-#   "warning_in_test",
-#   {
-#     guid: "test-guid",
-#     timestamp: :_,
-#     type: "success",
-#     issues: [],
-#     analyzer: {name: "golangci-lint", version: "1.23.1"}
-#   }
-# )
-
 Smoke.add_test(
   "failure",
   {
     guid: "test-guid",
     timestamp: :_,
     type: "failure",
-    message: "Running error",
+    message: /\/tmp\/(.+)\/sample.go:4:3: undeclared name: fmt/,
     analyzer: {name: "golangci-lint", version: "1.23.1"}
   }
 )
