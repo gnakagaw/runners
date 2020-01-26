@@ -39,9 +39,9 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: { start_line: 9 },
-        id: "errcheck",
-        message: "Error return value of `validate` is not checked",
+        location: { start_line: 11 },
+        id: "bodyclose",
+        message: "response body must be closed",
         links: [],
         object: nil,
         git_blame_info: nil

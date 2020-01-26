@@ -1,18 +1,20 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 func main() {
-	validate(1)
-}
-
-func validate(num int) error {
-	if num < 0 {
-		return errors.New("error")
+	resp, err := http.Get("http://example.com/")
+	if err != nil {
+		log.Fatal(err)
 	}
-	fmt.Println("ok")
-	return nil
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", body)
 }

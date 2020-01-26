@@ -6,3 +6,5 @@ linter:
       - govet
       - staticcheck
       - errcheck
+      - bodyclose
+      - gocyclo

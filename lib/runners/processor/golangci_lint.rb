@@ -115,17 +115,23 @@ module Runners
         opts << "--issues-exit-code=0"
         opts << "--tests=false" if config[:tests] == false
         opts << "--config=#{config[:config]}" if config[:config]
+        opts = default_enable(opts)
         Array(config[:disable]).each { |disable| opts << "--disable=#{disable}" }
         Array(config[:enable]).each { |enable| opts << "--enable=#{enable}" }
         Array(config[:presets]).each { |preset| opts << "--presets=#{preset}" }
         Array(config[:'skip-dirs']).each { |dir| opts << "--skip-dirs=#{dir}" }
         Array(config[:'skip-files']).each { |file| opts << "--skip-files=#{file}" }
-
-        opts << "--disable-all" if config[:'disable-all'] == true
         opts << "--uniq-by-line=false" if config[:'uniq-by-line'] == false
         opts << "--no-config=true" if config[:'no-config'] == true
         opts << "--skip-dirs-use-default=false" if config[:'skip-dirs-use-default'] == false
       end
+    end
+
+    def default_enable(opts)
+      return opts << "--disable-all" if config[:'disable-all'] == true
+      opts << "--enable=bodyclose" unless Array(config[:disable]).include?('bodyclose')
+      opts << "--enable=gocyclo" unless Array(config[:disable]).include?('gocyclo')
+      opts
     end
 
     def analysis_targets
