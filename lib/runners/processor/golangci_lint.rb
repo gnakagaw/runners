@@ -70,58 +70,34 @@ module Runners
         end
       end
 
-      # TODO this pattern may not be failure but could not find the condition yet
-      if status.exitstatus == 2
-        Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
-      end
-
-      # TODO it may have multiple pattern like illegal path, precondition error, enable and disable the same linter at the same time etc..
-      # TODO read code for golangci-lint
       if status.exitstatus == 3
-        return handle_respective_error(stderr)
+        return Results::Failure.new(guid: guid, analyzer: analyzer, message: handle_respective_message(stderr))
       end
 
       if status.exitstatus == 5 && stderr.include?("no go files to analyze")
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No go files to analyze")
       end
 
-      # `6` will be returned when execute 'golangci-lint config path.
-      if status.exitstatus == 6
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
-      end
-
-      if status.exitstatus == 7
-        Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
-      end
-
       Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
     end
 
-    def handle_respective_error(stderr)
-      if stderr.include?("must enable at least one")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Must enable at least one linter")
+    def handle_respective_message(stderr)
+      case stderr
+      when /must enable at least one/
+        "Must enable at least one linter"
+      when /can't be disabled and enabled at one moment/
+        "Can't be disabled and enabled at one moment"
+      when /can't combine options --disable-all and --disable/
+        "Can't combine options --disable-all and --disable"
+      when /only next presets exist/
+        "Only next presets exist: (bugs|complexity|format|performance|style|unused)"
+      when /no such linter/
+       "No such linter"
+      when /can't combine option --config and --no-config/
+       "Can't combine option --config and --no-config"
+      else
+        stderr
       end
-
-      if stderr.include?("can't be disabled and enabled at one moment")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't be disabled and enabled at one moment")
-      end
-
-      if stderr.include?("can't combine options --disable-all and --disable")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "can't combine options --disable-all and --disable")
-      end
-
-      if stderr.include?("only next presets exist")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Only next presets exist: (bugs|complexity|format|performance|style|unused)")
-      end
-
-      if stderr.include?("no such linter")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No such linter")
-      end
-      if stderr.include?("can't combine option --config and --no-config")
-        return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Can't combine option --config and --no-config")
-      end
-      # return Results::Failure.new(guid: guid, analyzer: analyzer, message: stderr)
-      return Results::Failure.new(guid: guid, analyzer: analyzer, message: "Running error")
     end
 
     def config

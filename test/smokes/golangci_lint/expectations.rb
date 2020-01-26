@@ -216,7 +216,7 @@ Smoke.add_test(
     guid: "test-guid",
     timestamp: :_,
     type: "failure",
-    message: "can't combine options --disable-all and --disable",
+    message: "Can't combine options --disable-all and --disable",
     analyzer: {name: "golangci-lint", version: "1.23.1"}
   }
 )
