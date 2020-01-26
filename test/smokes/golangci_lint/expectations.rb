@@ -9,7 +9,7 @@ Smoke.add_test(
     issues: [
       {
         path: "dir1/sample.go",
-        location: {start_line: 9},
+        location: { start_line: 9 },
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
         links: [],
@@ -18,15 +18,15 @@ Smoke.add_test(
       },
       {
         path: "dir2/src/sample.go",
-        location: {start_line: 9},
+        location: { start_line: 9 },
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -39,15 +39,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 9},
+        location: { start_line: 9 },
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -58,7 +58,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -68,8 +68,8 @@ Smoke.add_test(
     guid: "test-guid",
     timestamp: :_,
     type: "failure",
-    message: /\/tmp\/(.+)\/sample.go:4:3: undeclared name: fmt/,
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    message: %r{\/tmp\/(.+)\/sample.go:4:3: undeclared name: fmt},
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -80,7 +80,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "No go files to analyze",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -93,7 +93,7 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 17},
+        location: { start_line: 17 },
         id: "lll",
         message: "line is 188 characters",
         links: [],
@@ -102,15 +102,15 @@ Smoke.add_test(
       },
       {
         path: "sample.go",
-        location: {start_line: 11},
+        location: { start_line: 11 },
         id: "structcheck",
         message: "`birthDay` is unused",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
-   ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+      }
+    ],
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -123,15 +123,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 8},
+        location: { start_line: 8 },
         id: "varcheck",
         message: "`unused` is unused",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -144,15 +144,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 8},
+        location: { start_line: 8 },
         id: "misspell",
         message: "`Amercia` is a misspelling of `America`",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -165,15 +165,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 8},
+        location: { start_line: 8 },
         id: "unused",
         message: "var `unused` is unused",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -184,7 +184,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Must enable at least one linter",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -195,7 +195,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Can't be disabled and enabled at one moment",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -206,7 +206,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Can't combine options --disable-all and --disable",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -219,7 +219,7 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 7},
+        location: { start_line: 7 },
         id: "deadcode",
         message: "`unused` is unused",
         links: [],
@@ -228,7 +228,7 @@ Smoke.add_test(
       },
       {
         path: "sample.go",
-        location: {start_line: 7},
+        location: { start_line: 7 },
         id: "unused",
         message: "var `unused` is unused",
         links: [],
@@ -237,15 +237,15 @@ Smoke.add_test(
       },
       {
         path: "sample.go",
-        location: {start_line: 7},
+        location: { start_line: 7 },
         id: "varcheck",
         message: "`unused` is unused",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -256,7 +256,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -269,15 +269,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 8},
+        location: { start_line: 8 },
         id: "varcheck",
         message: "`unused` is unused",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -290,15 +290,15 @@ Smoke.add_test(
     issues: [
       {
         path: "sample.go",
-        location: {start_line: 4},
+        location: { start_line: 4 },
         id: "gofmt",
         message: "File is not `gofmt`-ed with `-s`",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -309,7 +309,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Only next presets exist: (bugs|complexity|format|performance|style|unused)",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -320,7 +320,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "No such linter",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -331,7 +331,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-   analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -342,7 +342,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Can't combine option --config and --no-config",
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -355,15 +355,15 @@ Smoke.add_test(
     issues: [
       {
         path: "vendor/third_party.go",
-        location: {start_line: 9},
+        location: { start_line: 9 },
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
         git_blame_info: nil
-      },
+      }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -374,7 +374,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )
 
@@ -387,7 +387,7 @@ Smoke.add_test(
     issues: [
       {
         path: "src/libs/sample.go",
-        location: {start_line: 9},
+        location: { start_line: 9 },
         id: "errcheck",
         message: "Error return value of `validate` is not checked",
         links: [],
@@ -395,6 +395,6 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: {name: "golangci-lint", version: "1.23.1"}
+    analyzer: { name: "golangci-lint", version: "1.23.1" }
   }
 )

@@ -2,29 +2,31 @@ module Runners
   class Processor::GolangCiLint < Processor
     include Go
 
-    Schema = StrongJSON.new do
-      let :runner_config, Schema::RunnerConfig.base.update_fields { |fields|
-        fields.merge!({
-                        target: enum?(string, array(string)),
-                        config: string?,
-                        disable: enum?(string, array(string)),
-                        'disable-all': boolean?,
-                        enable: enum?(string, array(string)),
-                        fast: boolean?,
-                        'no-config': boolean?,
-                        presets: enum?(string, array(string)),
-                        'skip-dirs': enum?(string, array(string)),
-                        'skip-dirs-use-default': boolean?,
-                        'skip-files': enum?(string, array(string)),
-                        tests: boolean?,
-                        'uniq-by-line': boolean?,
-                      })
-      }
+    Schema =
+      StrongJSON.new do
+        let :runner_config,
+            Schema::RunnerConfig.base.update_fields { |fields|
+              fields.merge!(
+                {
+                  target: enum?(string, array(string)),
+                  config: string?,
+                  disable: enum?(string, array(string)),
+                  'disable-all': boolean?,
+                  enable: enum?(string, array(string)),
+                  fast: boolean?,
+                  'no-config': boolean?,
+                  presets: enum?(string, array(string)),
+                  'skip-dirs': enum?(string, array(string)),
+                  'skip-dirs-use-default': boolean?,
+                  'skip-files': enum?(string, array(string)),
+                  tests: boolean?,
+                  'uniq-by-line': boolean?
+                }
+              )
+            }
 
-      let :issue, object(
-        severity: string?,
-      )
-    end
+        let :issue, object(severity: string?)
+      end
 
     DEFAULT_TARGET = "./...".freeze
 
@@ -48,7 +50,6 @@ module Runners
       end
     end
 
-
     private
 
     # [ref] https://github.com/golangci/golangci-lint/blob/master/pkg/exitcodes/exitcodes.go
@@ -62,12 +63,14 @@ module Runners
     #     ErrorWasLogged       = 7
 
     def run_analyzer
-      stdout, stderr, status = capture3(analyzer_bin, 'run', *analyzer_options)
-      if (status.exitstatus == 0  || status.exitstatus == 1) && stdout && stderr.empty?
-        return Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-          issues = parse_result(stdout)
-          issues.each { |v| result.add_issue(v) } unless issues.nil?
-        end
+      stdout, stderr, status = capture3(analyzer_bin, "run", *analyzer_options)
+      if (status.exitstatus == 0 || status.exitstatus == 1) && stdout && stderr.empty?
+        return(
+          Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
+            issues = parse_result(stdout)
+            issues.each { |v| result.add_issue(v) } unless issues.nil?
+          end
+        )
       end
 
       if status.exitstatus == 3
@@ -92,9 +95,9 @@ module Runners
       when /only next presets exist/
         "Only next presets exist: (bugs|complexity|format|performance|style|unused)"
       when /no such linter/
-       "No such linter"
+        "No such linter"
       when /can't combine option --config and --no-config/
-       "Can't combine option --config and --no-config"
+        "Can't combine option --config and --no-config"
       else
         msg = stderr.match(/level=error msg=.+\[(.+)\]/)
         msg && msg[1] ? msg[1] : "Running Error"
@@ -107,43 +110,26 @@ module Runners
 
     def analyzer_options
       [].tap do |opts|
-        analysis_targets.each do |target|
-          opts << target
-        end
+        analysis_targets.each { |target| opts << target }
         opts << "--out-format=json"
         opts << "--issues-exit-code=0"
         opts << "--tests=false" if config[:tests] == false
         opts << "--config=#{config[:config]}" if config[:config]
-        Array(config[:disable]).each do |disable|
-          opts << "--disable=#{disable}"
-        end
-        Array(config[:enable]).each do |enable|
-          opts << "--enable=#{enable}"
-        end
-        Array(config[:presets]).each do |preset|
-          opts << "--presets=#{preset}"
-        end
-        Array(config[:'skip-dirs']).each do |dir|
-          opts << "--skip-dirs=#{dir}"
-        end
-        Array(config[:'skip-files']).each do |file|
-          opts << "--skip-files=#{file}"
-        end
+        Array(config[:disable]).each { |disable| opts << "--disable=#{disable}" }
+        Array(config[:enable]).each { |enable| opts << "--enable=#{enable}" }
+        Array(config[:presets]).each { |preset| opts << "--presets=#{preset}" }
+        Array(config[:'skip-dirs']).each { |dir| opts << "--skip-dirs=#{dir}" }
+        Array(config[:'skip-files']).each { |file| opts << "--skip-files=#{file}" }
 
         opts << "--disable-all" if config[:'disable-all'] == true
         opts << "--uniq-by-line=false" if config[:'uniq-by-line'] == false
         opts << "--no-config=true" if config[:'no-config'] == true
         opts << "--skip-dirs-use-default=false" if config[:'skip-dirs-use-default'] == false
-     end
+      end
     end
 
-
     def analysis_targets
-      if config[:target]
-        Array(config[:target])
-      else
-        Array(DEFAULT_TARGET)
-      end
+      config[:target] ? Array(config[:target]) : Array(DEFAULT_TARGET)
     end
 
     # Output format:
@@ -167,13 +153,7 @@ module Runners
         line = file[:Pos][:Line]
         id = file[:FromLinter]
 
-        Issue.new(
-          path: path,
-          location: Location.new(start_line: line),
-          id: id,
-          message: file[:Text],
-          links: [],
-        )
+        Issue.new(path: path, location: Location.new(start_line: line), id: id, message: file[:Text], links: [])
       end
     end
   end
