@@ -114,29 +114,24 @@ module Runners
         opts << "--issues-exit-code=0"
         opts << "--tests=false" if config[:tests] == false
         opts << "--config=#{config[:config]}" if config[:config]
-
-        Array(config[:disable]).each do |disable|
-          opts << "--disable=#{disable}"
-        end
-        Array(config[:enable]).each do |enable|
-          opts << "--enable=#{enable}"
-        end
-        Array(config[:presets]).each do |preset|
-          opts << "--presets=#{preset}"
-        end
-
+        opts = set_array_config(config)
         opts << "--disable-all" if config[:'disable-all'] == true
         opts << "--uniq-by-line=false" if config[:'uniq-by-line'] == false
         opts << "--no-config=true" if config[:'no-config'] == true
         opts << "--skip-dirs-use-default=false" if config[:'skip-dirs-use-default'] == false
+     end
+    end
 
-        Array(config[:'skip-dirs']).each do |dir|
-          opts << "--skip-dirs=#{dir}"
-        end
-        Array(config[:'skip-files']).each do |file|
-          opts << "--skip-files=#{file}"
+    def set_array_config(config)
+      config.map do |k, v|
+        case k
+        when 'disable', 'enable', 'presets', 'skip-dirs', 'skip-files'
+          opts << "--#{k}=#{v}"
+        else
+          nil
         end
       end
+      opts
     end
 
     def analysis_targets
