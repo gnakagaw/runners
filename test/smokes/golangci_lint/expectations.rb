@@ -26,7 +26,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -47,7 +47,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -58,7 +58,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -68,8 +68,9 @@ Smoke.add_test(
     guid: "test-guid",
     timestamp: :_,
     type: "failure",
-    message: %r{\/tmp\/(.+)\/sample.go:4:3: undeclared name: fmt},
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    # Error message will change randomly
+    message: %r{\/tmp\/.+\/sample.go:4:3: undeclared name: fmt|Running Error},
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -80,7 +81,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "No go files to analyze",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -110,7 +111,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -131,7 +132,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -152,7 +153,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -173,7 +174,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -184,7 +185,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Must enable at least one linter",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -195,7 +196,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Can't be disabled and enabled at one moment",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -206,7 +207,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Can't combine options --disable-all and --disable",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -245,7 +246,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -256,7 +257,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -277,7 +278,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -298,7 +299,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -309,7 +310,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Only next presets exist: (bugs|complexity|format|performance|style|unused)",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -320,7 +321,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "No such linter",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -331,7 +332,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -342,7 +343,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message: "Can't combine option --config and --no-config",
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -363,7 +364,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -374,7 +375,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )
 
@@ -395,6 +396,6 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "golangci-lint", version: "1.23.1" }
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )

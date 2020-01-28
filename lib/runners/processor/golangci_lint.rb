@@ -31,16 +31,11 @@ module Runners
     DEFAULT_TARGET = "./...".freeze
 
     def self.ci_config_section_name
-      # Section name in sideci.yml, Generally it is the name of analyzer tool.
-      "golangci-lint"
-    end
-
-    def analyzer_bin
       "golangci-lint"
     end
 
     def analyzer_name
-      "golangci-lint"
+      "GolangCI-Lint"
     end
 
     def analyze(changes)
@@ -52,7 +47,7 @@ module Runners
 
     private
 
-    # [ref] https://github.com/golangci/golangci-lint/blob/master/pkg/exitcodes/exitcodes.go
+    # @see https://github.com/golangci/golangci-lint/blob/v1.23.1/pkg/exitcodes/exitcodes.go
     #     Success              = 0
     #     IssuesFound          = 1
     #     WarningInTest        = 2
@@ -129,8 +124,8 @@ module Runners
 
     def default_enable(opts)
       return opts << "--disable-all" if config[:'disable-all'] == true
-      opts << "--enable=bodyclose" unless Array(config[:disable]).include?('bodyclose')
-      opts << "--enable=gocyclo" unless Array(config[:disable]).include?('gocyclo')
+      opts << "--enable=bodyclose" unless Array(config[:disable]).include?("bodyclose")
+      opts << "--enable=gocyclo" unless Array(config[:disable]).include?("gocyclo")
       opts
     end
 
@@ -148,7 +143,6 @@ module Runners
     #
     # @see https://github.com/hadolint/hadolint#rules
     # @param stdout [String]
-    # TODO how to handle replacement
     def parse_result(stdout)
       json = JSON.parse(stdout, symbolize_names: true)
       return if json[:Issues].nil?
