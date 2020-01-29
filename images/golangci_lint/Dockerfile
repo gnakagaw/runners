@@ -4,6 +4,14 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 FROM sider/devon_rex_go:2.12.0
 
+ARG LINT_TOOL_VERSION="1.23.1"
+
+USER root
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v${LINT_TOOL_VERSION}
+
+USER $RUNNER_USER
+RUN golangci-lint --version
+
 ARG RUNNERS_DIR=${RUNNER_USER_HOME}/runners
 
 # Install required gems first (due to slow download)
@@ -14,15 +22,7 @@ RUN cd ${RUNNERS_DIR} && \
     bundle config --local without development:test && \
     bundle config && \
     bundle install
-
-ARG LINT_TOOL_VERSION="1.23.1"
-
-USER root
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin v${LINT_TOOL_VERSION}
-
-USER $RUNNER_USER
-RUN golangci-lint --version
-
+COPY --chown=analyzer_runner:nogroup images/golangci_lint/golangci.yml ${RUNNER_USER_HOME}/
 # Copy the main source code
 COPY --chown=analyzer_runner:nogroup bin ${RUNNERS_DIR}/bin
 COPY --chown=analyzer_runner:nogroup lib ${RUNNERS_DIR}/lib

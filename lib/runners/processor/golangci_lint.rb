@@ -30,6 +30,8 @@ module Runners
 
     DEFAULT_TARGET = "./...".freeze
 
+    DEFAULT_CONFIG_PATH =
+
     def self.ci_config_section_name
       "golangci-lint"
     end
@@ -109,8 +111,7 @@ module Runners
         opts << "--out-format=json"
         opts << "--issues-exit-code=0"
         opts << "--tests=#{config[:tests]}" unless config[:tests].nil?
-        opts << "--config=#{config[:config]}" if config[:config]
-        opts = default_enable(opts)
+        opts << "--config=#{path_to_config}" if path_to_config
         Array(config[:disable]).each { |disable| opts << "--disable=#{disable}" }
         Array(config[:enable]).each { |enable| opts << "--enable=#{enable}" }
         Array(config[:presets]).each { |preset| opts << "--presets=#{preset}" }
@@ -119,14 +120,16 @@ module Runners
         opts << "--uniq-by-line=#{config[:'uniq-by-line']}" unless config[:'uniq-by-line'].nil?
         opts << "--no-config=#{config[:'no-config']}" unless config[:'no-config'].nil?
         opts << "--skip-dirs-use-default=#{config[:'skip-dirs-use-default']}" unless config[:'skip-dirs-use-default'].nil?
+        opts << "--disable-all=#{config[:'disable-all']}" unless config[:'disable-all'].nil?
       end
     end
 
-    def default_enable(opts)
-      return opts << "--disable-all" if config[:'disable-all'] == true
-      opts << "--enable=bodyclose" unless Array(config[:disable]).include?("bodyclose")
-      opts << "--enable=gocyclo" unless Array(config[:disable]).include?("gocyclo")
-      opts
+    def path_to_config
+      if config[:'disable-all'] == true
+        config[:config]
+      else
+        config[:config] ? config[:config] : (Pathname(Dir.home) / 'golangci.yml').realpath
+      end
     end
 
     def analysis_targets

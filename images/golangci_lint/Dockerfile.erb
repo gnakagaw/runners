@@ -1,7 +1,5 @@
 FROM sider/devon_rex_go:2.12.0
 
-<%= render_erb 'images/Dockerfile.base.erb' %>
-
 ARG LINT_TOOL_VERSION="1.23.1"
 
 USER root
@@ -10,4 +8,6 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 USER $RUNNER_USER
 RUN golangci-lint --version
 
+<%= render_erb 'images/Dockerfile.base.erb' %>
+COPY --chown=<%= ENV.fetch("RUNNER_CHOWN") %> images/golangci_lint/golangci.yml ${RUNNER_USER_HOME}/
 <%= render_erb 'images/Dockerfile.end.erb' %>
