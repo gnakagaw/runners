@@ -72,7 +72,7 @@ module Runners
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: handle_respective_message(stderr))
       end
 
-      if status.exitstatus == 5 && stderr.include?("no go files to analyze")
+      if status.exitstatus == 5
         return Results::Failure.new(guid: guid, analyzer: analyzer, message: "No go files to analyze")
       end
 
@@ -108,7 +108,7 @@ module Runners
         analysis_targets.each { |target| opts << target }
         opts << "--out-format=json"
         opts << "--issues-exit-code=0"
-        opts << "--tests=false" if config[:tests] == false
+        opts << "--tests=#{config[:tests]}" unless config[:tests].nil?
         opts << "--config=#{config[:config]}" if config[:config]
         opts = default_enable(opts)
         Array(config[:disable]).each { |disable| opts << "--disable=#{disable}" }
@@ -116,9 +116,9 @@ module Runners
         Array(config[:presets]).each { |preset| opts << "--presets=#{preset}" }
         Array(config[:'skip-dirs']).each { |dir| opts << "--skip-dirs=#{dir}" }
         Array(config[:'skip-files']).each { |file| opts << "--skip-files=#{file}" }
-        opts << "--uniq-by-line=false" if config[:'uniq-by-line'] == false
-        opts << "--no-config=true" if config[:'no-config'] == true
-        opts << "--skip-dirs-use-default=false" if config[:'skip-dirs-use-default'] == false
+        opts << "--uniq-by-line=#{config[:'uniq-by-line']}" unless config[:'uniq-by-line'].nil?
+        opts << "--no-config=#{config[:'no-config']}" unless config[:'no-config'].nil?
+        opts << "--skip-dirs-use-default=#{config[:'skip-dirs-use-default']}" unless config[:'skip-dirs-use-default'].nil?
       end
     end
 
@@ -130,7 +130,7 @@ module Runners
     end
 
     def analysis_targets
-      config[:target] ? Array(config[:target]) : Array(DEFAULT_TARGET)
+      Array(config[:target] || DEFAULT_TARGET)
     end
 
     # Output format:
@@ -141,11 +141,10 @@ module Runners
     #
     #     {:FromLinter=>"govet", :Text=>"printf: Printf call has arguments but no formatting directives", :SourceLines=>["\tfmt.Printf(\"text\", awesome_text)"], :Replacement=>nil, :Pos=>{:Filename=>"test/smokes/golangci_lint/success/main.go", :Offset=>85, :Line=>7, :Column=>12}}
     #
-    # @see https://github.com/hadolint/hadolint#rules
     # @param stdout [String]
     def parse_result(stdout)
       json = JSON.parse(stdout, symbolize_names: true)
-      return if json[:Issues].nil?
+      return [] unless json[:Issues]
 
       json[:Issues].map do |file|
         path = relative_path(file[:Pos][:Filename])
