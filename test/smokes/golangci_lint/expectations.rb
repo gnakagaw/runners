@@ -179,6 +179,17 @@ Smoke.add_test(
 )
 
 Smoke.add_test(
+  "disable_default_linter_in_yml",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "failure",
+    message: "Can't be disabled and enabled at one moment",
+    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
+  }
+)
+
+Smoke.add_test(
   "disable_only",
   {
     guid: "test-guid",
@@ -332,17 +343,6 @@ Smoke.add_test(
     timestamp: :_,
     type: "success",
     issues: [],
-    analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
-  }
-)
-
-Smoke.add_test(
-  "config_and_noconfig",
-  {
-    guid: "test-guid",
-    timestamp: :_,
-    type: "failure",
-    message: "Can't combine option --config and --no-config",
     analyzer: { name: "GolangCI-Lint", version: "1.23.1" }
   }
 )

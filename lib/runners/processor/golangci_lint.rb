@@ -31,10 +31,9 @@ module Runners
     DEFAULT_TARGET = "./...".freeze
 
     DEFAULT_CONFIG_PATH =
-
-    def self.ci_config_section_name
-      "golangci-lint"
-    end
+      def self.ci_config_section_name
+        "golangci-lint"
+      end
 
     def analyzer_name
       "GolangCI-Lint"
@@ -64,8 +63,7 @@ module Runners
       if (status.exitstatus == 0 || status.exitstatus == 1) && stdout && stderr.empty?
         return(
           Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-            issues = parse_result(stdout)
-            issues.each { |v| result.add_issue(v) } unless issues.nil?
+            parse_result(stdout).each { |v| result.add_issue(v) }
           end
         )
       end
@@ -119,17 +117,17 @@ module Runners
         Array(config[:'skip-files']).each { |file| opts << "--skip-files=#{file}" }
         opts << "--uniq-by-line=#{config[:'uniq-by-line']}" unless config[:'uniq-by-line'].nil?
         opts << "--no-config=#{config[:'no-config']}" unless config[:'no-config'].nil?
-        opts << "--skip-dirs-use-default=#{config[:'skip-dirs-use-default']}" unless config[:'skip-dirs-use-default'].nil?
+        unless config[:'skip-dirs-use-default'].nil?
+          opts << "--skip-dirs-use-default=#{config[:'skip-dirs-use-default']}"
+        end
         opts << "--disable-all=#{config[:'disable-all']}" unless config[:'disable-all'].nil?
       end
     end
 
     def path_to_config
-      if config[:'disable-all'] == true
-        config[:config]
-      else
-        config[:config] ? config[:config] : (Pathname(Dir.home) / 'golangci.yml').realpath
-      end
+      return false if config[:'no-config'] == true
+      return false if config[:'disable-all'] == true
+      config[:config] ? config[:config] : (Pathname(Dir.home) / "golangci.yml").realpath
     end
 
     def analysis_targets
