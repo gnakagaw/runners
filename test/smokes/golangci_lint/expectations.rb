@@ -10,7 +10,7 @@ Smoke.add_test(
       {
         path: "dir1/sample.go",
         location: { start_line: 9 },
-        id: "errcheck",
+        id: "errcheck:Error",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
@@ -19,7 +19,7 @@ Smoke.add_test(
       {
         path: "dir2/src/sample.go",
         location: { start_line: 9 },
-        id: "errcheck",
+        id: "errcheck:Error",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
@@ -40,7 +40,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 11 },
-        id: "bodyclose",
+        id: "bodyclose:response",
         message: "response body must be closed",
         links: [],
         object: nil,
@@ -95,7 +95,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 17 },
-        id: "lll",
+        id: "lll:line",
         message: "line is 188 characters",
         links: [],
         object: nil,
@@ -104,7 +104,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 11 },
-        id: "structcheck",
+        id: "structcheck:`birthDay`",
         message: "`birthDay` is unused",
         links: [],
         object: nil,
@@ -125,7 +125,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 8 },
-        id: "varcheck",
+        id: "varcheck:`unused`",
         message: "`unused` is unused",
         links: [],
         object: nil,
@@ -146,7 +146,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 8 },
-        id: "misspell",
+        id: "misspell:`Amercia`",
         message: "`Amercia` is a misspelling of `America`",
         links: [],
         object: nil,
@@ -167,7 +167,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 8 },
-        id: "unused",
+        id: "unused:var",
         message: "var `unused` is unused",
         links: [],
         object: nil,
@@ -232,7 +232,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 7 },
-        id: "deadcode",
+        id: "deadcode:`unused`",
         message: "`unused` is unused",
         links: [],
         object: nil,
@@ -241,7 +241,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 7 },
-        id: "unused",
+        id: "unused:var",
         message: "var `unused` is unused",
         links: [],
         object: nil,
@@ -250,7 +250,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 7 },
-        id: "varcheck",
+        id: "varcheck:`unused`",
         message: "`unused` is unused",
         links: [],
         object: nil,
@@ -282,7 +282,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 8 },
-        id: "varcheck",
+        id: "varcheck:`unused`",
         message: "`unused` is unused",
         links: [],
         object: nil,
@@ -303,7 +303,7 @@ Smoke.add_test(
       {
         path: "sample.go",
         location: { start_line: 4 },
-        id: "gofmt",
+        id: "gofmt:File",
         message: "File is not `gofmt`-ed with `-s`",
         links: [],
         object: nil,
@@ -357,7 +357,7 @@ Smoke.add_test(
       {
         path: "vendor/third_party.go",
         location: { start_line: 9 },
-        id: "errcheck",
+        id: "errcheck:Error",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,
@@ -389,7 +389,7 @@ Smoke.add_test(
       {
         path: "src/libs/sample.go",
         location: { start_line: 9 },
-        id: "errcheck",
+        id: "errcheck:Error",
         message: "Error return value of `validate` is not checked",
         links: [],
         object: nil,

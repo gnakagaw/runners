@@ -151,7 +151,7 @@ module Runners
         path = relative_path(file[:Pos][:Filename])
 
         line = file[:Pos][:Line]
-        id = file[:FromLinter]
+        id = "#{file[:FromLinter]}:#{file[:Text].split(" ").first}"
 
         Issue.new(path: path, location: Location.new(start_line: line), id: id, message: file[:Text], links: [])
       end
