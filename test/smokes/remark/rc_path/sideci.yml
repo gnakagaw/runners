@@ -1,0 +1,3 @@
+linter:
+  remark:
+    rc-path: config/.remarkrc

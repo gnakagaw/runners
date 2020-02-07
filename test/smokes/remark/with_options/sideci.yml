@@ -1,0 +1,4 @@
+linter:
+  remark:
+    rc-path: config/.remarkrc
+    glob: "**/*.md"

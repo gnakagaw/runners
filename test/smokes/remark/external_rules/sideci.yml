@@ -1,0 +1,3 @@
+linter:
+  remark:
+    npm_install: true
