@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 [Full diff](https://github.com/sider/runners/compare/0.20.0...HEAD)
 
 - Show stderr of git-blame(1) [#756](https://github.com/sider/runners/pull/756)
+- [FxCop Analyzers] New support [#731](https://github.com/sider/runners/pull/731)
 
 ## 0.20.0
 

@@ -186,6 +186,10 @@ jobs:
     environment:
       ANALYZER: hadolint
     <<: *runner_job
+  runner_fxcop_analyzers:
+    environment:
+      ANALYZER: fxcop_analyzers
+    <<: *runner_job
 
 workflows:
   version: 2
@@ -224,3 +228,4 @@ workflows:
       - runner_shellcheck: { filters: { tags: { only: /.*/ } } }
       - runner_cpplint: { filters: { tags: { only: /.*/ } } }
       - runner_hadolint: { filters: { tags: { only: /.*/ } } }
+      - runner_fxcop_analyzers: { filters: { tags: { only: /.*/ } } }
