@@ -95,7 +95,7 @@ module Runners
         *options,
       )
 
-      unless status.exitstatus == 0 || status.exitstatus == 2
+      unless status.exited? && (status.exitstatus == 0 || status.exitstatus == 2)
         return Results::Failure.new(guid: guid, message: stderr, analyzer: analyzer)
       end
 
