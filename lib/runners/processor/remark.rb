@@ -36,7 +36,7 @@ module Runners
     end
 
     def setup
-      add_warning_if_deprecated_options([:options], doc: "https://help.sider.review/tools/javascript/remark")
+      add_warning_if_deprecated_options([:options])
 
       ensure_runner_config_schema(Schema.runner_config) do |config|
         begin
