@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 
 [Full diff](https://github.com/sider/runners/compare/0.21.7...HEAD)
+ 
+- [remarklint] New support (#813)
 
 ## 0.21.7
 
