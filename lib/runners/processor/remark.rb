@@ -31,36 +31,24 @@ module Runners
       "remark" => Constraint.new(">= 11.0.0"),
     }.freeze
 
-    def self.ci_config_section_name
-      'remark'
-    end
+    register_config_schema(name: :remark, schema: Schema.runner_config)
 
     def setup
       add_warning_if_deprecated_options([:options])
 
-      ensure_runner_config_schema(Schema.runner_config) do |config|
-        begin
-          install_nodejs_deps(DEFAULT_DEPS, constraints: CONSTRAINTS, install_option: config[:npm_install])
-        rescue UserError => exn
-          return Results::Failure.new(guid: guid, message: exn.message, analyzer: nil)
-        end
-
-        analyzer # Must initialize after installation
-        yield
+      begin
+        install_nodejs_deps(DEFAULT_DEPS, constraints: CONSTRAINTS, install_option: config_linter[:npm_install])
+      rescue UserError => exn
+        return Results::Failure.new(guid: guid, message: exn.message, analyzer: nil)
       end
-    end
-
-    def analyzer_name
-      'Remark'
+      analyzer # Must initialize after installation
+      yield
     end
 
     def analyze _changes
-      ensure_runner_config_schema(Schema.runner_config) do |config|
-
-        check_runner_config(config) do |target, options|
+        check_runner_config(config_linter) do |target, options|
           run_analyzer(target, options)
         end
-      end
     end
 
     private

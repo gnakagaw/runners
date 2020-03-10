@@ -1,22 +1,23 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# NOTE: DO *NOT* EDIT THIS FILE.  IT IS GENERATED.
-# PLEASE UPDATE Dockerfile.erb INSTEAD OF THIS FILE
+# NOTE: DO *NOT* EDIT THIS FILE. IT IS GENERATED.
+# PLEASE UPDATE Dockerfile.erb INSTEAD OF THIS FILE.
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 FROM sider/devon_rex_npm:2.12.0
+
 
 ARG RUNNERS_DIR=${RUNNER_USER_HOME}/runners
 
 # Install required gems first (due to slow download)
-COPY --chown=analyzer_runner:nogroup Gemfile* ${RUNNERS_DIR}/
+COPY --chown=${RUNNER_USER}:nogroup Gemfile* analyzers.yml ${RUNNERS_DIR}/
 RUN cd ${RUNNERS_DIR} && \
-    bundle config --global jobs 4 && \
-    bundle config --global retry 3 && \
-    bundle config --local without development:test && \
+    bundle config set --global jobs 4 && \
+    bundle config set --global retry 3 && \
     bundle config && \
-    bundle install
+    BUNDLE_WITHOUT=development:test bundle install && \
+    bundle list
 
 # Install the default version
-COPY --chown=analyzer_runner:nogroup images/remark/package.json ${RUNNER_USER_HOME}/remark_package.json
+COPY --chown=${RUNNER_USER}:nogroup images/remark/package.json ${RUNNER_USER_HOME}/remark_package.json
 RUN cd ${RUNNER_USER_HOME} && \
     mkdir remark && \
     mv remark_package.json remark/package.json && \
@@ -30,9 +31,10 @@ ENV PATH ${RUNNER_USER_HOME}/remark/node_modules/.bin:${PATH}
 # See https://nodejs.org/api/cli.html#cli_node_path_path
 ENV NODE_PATH ${RUNNER_USER_HOME}/remark/node_modules:${NODE_PATH}
 
+
 # Copy the main source code
-COPY --chown=analyzer_runner:nogroup bin ${RUNNERS_DIR}/bin
-COPY --chown=analyzer_runner:nogroup lib ${RUNNERS_DIR}/lib
+COPY --chown=${RUNNER_USER}:nogroup bin ${RUNNERS_DIR}/bin
+COPY --chown=${RUNNER_USER}:nogroup lib ${RUNNERS_DIR}/lib
 
 ENV PATH ${RUNNERS_DIR}/bin:${PATH}
 
