@@ -95,7 +95,11 @@ module Runners
         *options,
       )
 
-      unless status.exited? && (status.exitstatus == 0 || status.exitstatus == 2)
+      unless status.exited?
+        return Results::Failure.new(guid: guid, message: "Process aborted or coredumped: #{status.inspect}", analyzer: analyzer)
+      end
+
+      unless status.exitstatus == 0 || status.exitstatus == 2
         return Results::Failure.new(guid: guid, message: stderr, analyzer: analyzer)
       end
 
