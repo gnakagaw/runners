@@ -19,6 +19,7 @@ module Runners
                       })
       })
     end
+    register_config_schema(name: :remark, schema: Schema.runner_config)
 
     DEFAULT_DEPS = DefaultDependencies.new(
       main: Dependency.new(name: "remark", version: "11.0.2"),
@@ -30,8 +31,6 @@ module Runners
     CONSTRAINTS = {
       "remark" => Constraint.new(">= 11.0.0"),
     }.freeze
-
-    register_config_schema(name: :remark, schema: Schema.runner_config)
 
     def setup
       add_warning_if_deprecated_options([:options])
