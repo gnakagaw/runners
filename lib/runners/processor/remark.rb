@@ -87,7 +87,7 @@ module Runners
     end
 
     def run_analyzer target, options
-      stdout, stderr, status = capture3(
+      _, stderr, status = capture3(
         nodejs_analyzer_bin,
         target,
         "--report",
