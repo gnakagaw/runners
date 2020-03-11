@@ -17,19 +17,18 @@ RUN cd ${RUNNERS_DIR} && \
     bundle list
 
 # Install the default version
-COPY --chown=${RUNNER_USER}:nogroup images/remark/package.json ${RUNNER_USER_HOME}/remark_package.json
+COPY --chown=${RUNNER_USER}:nogroup images/remark_lint/package.json ${RUNNER_USER_HOME}/remark_lint_package.json
 RUN cd ${RUNNER_USER_HOME} && \
-    mkdir remark && \
-    mv remark_package.json remark/package.json && \
-    cd remark && \
+    mkdir remark_lint && \
+    mv remark_lint_package.json remark_lint/package.json && \
+    cd remark_lint && \
     npm config set ignore-scripts true && \
     npm config set progress false && \
     npm config set package-lock false && \
-    npm install && \
-    node_modules/.bin/remark --version
-ENV PATH ${RUNNER_USER_HOME}/remark/node_modules/.bin:${PATH}
+    npm install
+ENV PATH ${RUNNER_USER_HOME}/remark_lint/node_modules/.bin:${PATH}
 # See https://nodejs.org/api/cli.html#cli_node_path_path
-ENV NODE_PATH ${RUNNER_USER_HOME}/remark/node_modules:${NODE_PATH}
+ENV NODE_PATH ${RUNNER_USER_HOME}/remark_lint/node_modules:${NODE_PATH}
 
 
 # Copy the main source code
@@ -42,4 +41,4 @@ ENV PATH ${RUNNERS_DIR}/bin:${PATH}
 USER $RUNNER_USER
 WORKDIR $RUNNER_USER_HOME
 
-ENTRYPOINT ["/usr/bin/timeout", "--signal=SIGUSR2", "--kill-after=10s", "30m", "runners", "--analyzer=remark"]
+ENTRYPOINT ["/usr/bin/timeout", "--signal=SIGUSR2", "--kill-after=10s", "30m", "runners", "--analyzer=remark_lint"]
