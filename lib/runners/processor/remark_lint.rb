@@ -17,15 +17,41 @@ module Runners
     register_config_schema(name: :remark, schema: Schema.runner_config)
 
     DEFAULT_DEPS = DefaultDependencies.new(
-      main: Dependency.new(name: "remark", version: "11.0.2"),
+      main: Dependency.new(name: "remark-lint", version: "6.0.5"),
       extras: [
         Dependency.new(name: "remark-cli", version: "7.0.1"),
+        Dependency.new(name: "remark-preset-lint-consistent", version: "2.0.3"),
+        Dependency.new(name: "remark-preset-lint-markdown-style-guide", version: "2.1.3"),
+        Dependency.new(name: "remark-preset-lint-recommended", version: "3.0.3"),
+        Dependency.new(name: "vfile-reporter-json", version: "2.0.1"),
       ],
     )
 
     CONSTRAINTS = {
-      "remark" => Constraint.new(">= 11.0.0"),
+      "remark-lint" => Constraint.new(">= 6.0.5", "< 7.0.0"),
+      "remark-cli" => Constraint.new(">= 7.0.1", "< 8.0.0"),
     }.freeze
+
+    def analyzer_bin
+      "remark"
+    end
+
+    def analyzer_version
+      @analyzer_version ||=
+        begin
+          pkg = DEFAULT_DEPS.main.name
+          args = %W[ls #{pkg} --depth=0 --json]
+          stdout, _ = if nodejs_analyzer_locally_installed?
+                        capture3! "npm", *args, trace_stdout: false
+                      else
+                        # default
+                        capture3! "npm", *args, trace_stdout: false, chdir: Pathname(Dir.home).join(analyzer_id)
+                      end
+          JSON.parse(stdout).dig("dependencies", pkg, "version").tap do |version|
+            raise "The installation of `#{pkg}` failed unexpectedly." unless version
+          end
+        end
+    end
 
     def setup
       begin
@@ -37,7 +63,7 @@ module Runners
       yield
     end
 
-    def analyze _changes
+    def analyze(_changes)
       check_runner_config(config_linter) do |target, options|
         run_analyzer(target, options)
       end
@@ -45,7 +71,7 @@ module Runners
 
     private
 
-    def check_runner_config config
+    def check_runner_config(config)
       target = target_glob config
       rc_path = rc_path config
       s = setting config
@@ -55,7 +81,7 @@ module Runners
       yield target, additional_options
     end
 
-    def target_glob config
+    def target_glob(config)
       if config[:glob]
         config[:glob]
       else
@@ -63,22 +89,22 @@ module Runners
       end
     end
 
-    def rc_path config
+    def rc_path(config)
       path = config[:"rc-path"]
       ["--rc-path", "#{path}"] if config[:"rc-path"]
     end
 
-    def setting config
+    def setting(config)
       setting = config[:setting]
       ["--setting", "#{setting}"] if setting
     end
 
-    def use config
+    def use(config)
       use = config[:use]
       ["--use", "#{use}"] if use
     end
 
-    def run_analyzer target, options
+    def run_analyzer(target, options)
       _, stderr, status = capture3(
         nodejs_analyzer_bin,
         target,
