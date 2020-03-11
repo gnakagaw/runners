@@ -4,21 +4,16 @@ module Runners
 
     Schema = StrongJSON.new do
       let(:runner_config, Schema::BaseConfig.npm.update_fields { |fields|
-        fields.merge!({
-                        glob: string?,
-                        config: string?,
-                        "rc-path": string?,
-                        "use": string?,
-                        setting: string?,
-                        # DO NOT ADD ANY OPTIONS in `options` option.
-                        options: optional(object(
-                                            config: string?,
-                                            setting: string?,
-                                            glob: string?
-                                          ))
-                      })
+        fields.merge!(
+          glob: string?,
+          config: string?,
+          "rc-path": string?,
+          use: string?,
+          setting: string?,
+        )
       })
     end
+
     register_config_schema(name: :remark, schema: Schema.runner_config)
 
     DEFAULT_DEPS = DefaultDependencies.new(
@@ -33,8 +28,6 @@ module Runners
     }.freeze
 
     def setup
-      add_warning_if_deprecated_options([:options])
-
       begin
         install_nodejs_deps(DEFAULT_DEPS, constraints: CONSTRAINTS, install_option: config_linter[:npm_install])
       rescue UserError => exn
@@ -45,9 +38,9 @@ module Runners
     end
 
     def analyze _changes
-        check_runner_config(config_linter) do |target, options|
-          run_analyzer(target, options)
-        end
+      check_runner_config(config_linter) do |target, options|
+        run_analyzer(target, options)
+      end
     end
 
     private
@@ -76,12 +69,12 @@ module Runners
     end
 
     def setting config
-      setting = config[:setting] || config.dig(:options, :setting)
+      setting = config[:setting]
       ["--setting", "#{setting}"] if setting
     end
 
     def use config
-      use = config[:use] || config.dig(:options, :use)
+      use = config[:use]
       ["--use", "#{use}"] if use
     end
 
