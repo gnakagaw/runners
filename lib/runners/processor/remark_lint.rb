@@ -64,14 +64,11 @@ module Runners
 
     def remark_lint_version!(global: false)
       pkg = DEFAULT_DEPS.main.name
-      args = %W[ls #{pkg} --depth=0 --json]
-      stdout, _ =
-        if global
-          capture3! "npm", *args, trace_stdout: false, chdir: Pathname(Dir.home).join(analyzer_id)
-        else
-          capture3! "npm", *args, trace_stdout: false
-        end
-      JSON.parse(stdout).dig("dependencies", pkg, "version")
+      chdir = global ? Pathname(Dir.home).join(analyzer_id) : nil
+      deps = list_installed_nodejs_deps only: [pkg], chdir: chdir
+      deps.fetch(pkg).tap do |version|
+        raise "No version of `#{analyzer_name}`" if version.empty?
+      end
     end
 
     def check_runner_config(config)
