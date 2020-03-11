@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 [Full diff](https://github.com/sider/runners/compare/0.21.7...HEAD)
 
+- Improve warnings for Node.js runners [#844](https://github.com/sider/runners/pull/844)
+- Use ASCII_8BIT to avoid ArgumentError for #scan [#845](https://github.com/sider/runners/pull/845)
 - [remark-lint] New support [#813](https://github.com/sider/runners/pull/813)
 
 ## 0.21.7
