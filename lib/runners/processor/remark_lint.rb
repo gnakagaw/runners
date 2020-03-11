@@ -1,5 +1,5 @@
 module Runners
-  class Processor::Remark < Processor
+  class Processor::RemarkLint < Processor
     include Nodejs
 
     Schema = StrongJSON.new do
