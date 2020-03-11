@@ -94,7 +94,7 @@ jobs:
           - querly
           - rails_best_practices
           - reek
-          - remark
+          - remark_lint
           - rubocop
           - scss_lint
           - shellcheck
