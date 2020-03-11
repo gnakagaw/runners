@@ -30,7 +30,6 @@ ENV PATH ${RUNNER_USER_HOME}/remark_lint/node_modules/.bin:${PATH}
 # See https://nodejs.org/api/cli.html#cli_node_path_path
 ENV NODE_PATH ${RUNNER_USER_HOME}/remark_lint/node_modules:${NODE_PATH}
 
-
 # Copy the main source code
 COPY --chown=${RUNNER_USER}:nogroup bin ${RUNNERS_DIR}/bin
 COPY --chown=${RUNNER_USER}:nogroup lib ${RUNNERS_DIR}/lib
