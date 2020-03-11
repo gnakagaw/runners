@@ -36,21 +36,12 @@ module Runners
       "remark"
     end
 
-    def analyzer_version
-      @analyzer_version ||=
-        begin
-          pkg = DEFAULT_DEPS.main.name
-          args = %W[ls #{pkg} --depth=0 --json]
-          stdout, _ = if nodejs_analyzer_locally_installed?
-                        capture3! "npm", *args, trace_stdout: false
-                      else
-                        # default
-                        capture3! "npm", *args, trace_stdout: false, chdir: Pathname(Dir.home).join(analyzer_id)
-                      end
-          JSON.parse(stdout).dig("dependencies", pkg, "version").tap do |version|
-            raise "The installation of `#{pkg}` failed unexpectedly." unless version
-          end
-        end
+    def nodejs_analyzer_global_version
+      @nodejs_analyzer_global_version ||= remark_lint_version!(global: true)
+    end
+
+    def nodejs_analyzer_local_version
+      @nodejs_analyzer_local_version ||= remark_lint_version!
     end
 
     def setup
@@ -70,6 +61,18 @@ module Runners
     end
 
     private
+
+    def remark_lint_version!(global: false)
+      pkg = DEFAULT_DEPS.main.name
+      args = %W[ls #{pkg} --depth=0 --json]
+      stdout, _ =
+        if global
+          capture3! "npm", *args, trace_stdout: false, chdir: Pathname(Dir.home).join(analyzer_id)
+        else
+          capture3! "npm", *args, trace_stdout: false
+        end
+      JSON.parse(stdout).dig("dependencies", pkg, "version")
+    end
 
     def check_runner_config(config)
       target = target_glob config

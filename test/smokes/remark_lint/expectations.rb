@@ -26,7 +26,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "remarklint", version: "11.0.2" }
+    analyzer: { name: "remark-lint", version: "6.0.5" }
   }
 )
 
@@ -47,7 +47,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "remarklint", version: "11.0.2" }
+    analyzer: { name: "remark-lint", version: "6.0.5" }
   }
 )
 
@@ -86,7 +86,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "remarklint", version: "11.0.2" }
+    analyzer: { name: "remark-lint", version: "6.0.5" }
   }
 )
 
@@ -146,6 +146,6 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "remarklint", version: "11.0.2" }
+    analyzer: { name: "remark-lint", version: "6.0.5" }
   }
 )
