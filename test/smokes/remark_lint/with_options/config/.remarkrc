@@ -1,9 +1,0 @@
-{
-  "settings": {
-    "blockquote-indentation": 4,
-    "heading-style": "setext"
-  },
-  "plugins": [
-    "preset-lint-markdown-style-guide"
-  ]
-}

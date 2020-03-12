@@ -1,6 +1,0 @@
-### Lima ###
-
-## Kilo
-
-Juliett
-=======

@@ -26,7 +26,7 @@ module Runners
         Dependency.new(name: "remark-preset-lint-consistent", version: "2.0.3"),
         Dependency.new(name: "remark-preset-lint-markdown-style-guide", version: "2.1.3"),
         Dependency.new(name: "remark-preset-lint-recommended", version: "3.0.3"),
-        Dependency.new(name: "remark-preset-lint-sider", version: "0.1.1"),
+        Dependency.new(name: "remark-preset-lint-sider", version: "0.2.0"),
         Dependency.new(name: "vfile-reporter-json", version: "2.0.1"),
       ],
     )
@@ -150,27 +150,34 @@ module Runners
     def run_analyzer
       _, stderr, _ = capture3(nodejs_analyzer_bin, *cli_options, *analysis_target)
 
-      Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-        parse_result(stderr) do |issue|
-          result.add_issue issue
+      issues, errors = parse_result(stderr)
+
+      if errors.empty?
+        Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
+          issues.each { |i| result.add_issue(i) }
         end
+      else
+        errors.each { |e| trace_writer.error(e) }
+
+        msg = "#{errors.size} #{'error'.pluralize(errors.size)} reported. See the log for details."
+        Results::Failure.new(guid: guid, analyzer: analyzer, message: msg)
       end
     end
 
     def parse_result(output)
+      issues = []
+      errors = []
+
       JSON.parse(output, symbolize_names: true).each do |file|
         path = relative_path(file[:path])
 
         file[:messages].each do |message|
           if message[:fatal]
-            trace_writer.error <<~MSG
-              #{message[:reason]}
-              #{message[:stack]}
-            MSG
+            errors << "#{message[:reason]}\n#{message[:stack]}"
             next
           end
 
-          yield Issue.new(
+          issues << Issue.new(
             path: path,
             location: message[:line].then { |line| line ? Location.new(start_line: line) : nil },
             id: message[:ruleId],
@@ -178,6 +185,8 @@ module Runners
           )
         end
       end
+
+      [issues, errors]
     end
   end
 end

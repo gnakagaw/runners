@@ -1,4 +1,0 @@
-linter:
-  remark_lint:
-    rc-path: config/.remarkrc
-    target: "**/*.md"

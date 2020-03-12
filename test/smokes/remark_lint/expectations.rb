@@ -9,18 +9,18 @@ Smoke.add_test(
     issues: [
       {
         path: "readme.md",
-        location: { start_line: 1 },
-        id: "list-item-indent",
-        message: "Incorrect list-item indent: add 2 spaces",
+        location: { start_line: 3 },
+        id: "no-undefined-references",
+        message: "Found reference to undefined definition",
         links: [],
         object: nil,
         git_blame_info: nil
       },
       {
-        path: "readme.md",
-        location: { start_line: 3 },
-        id: "no-undefined-references",
-        message: "Found reference to undefined definition",
+        path: "docs/zzz.markdown",
+        location: { start_line: 1 },
+        id: "no-unused-definitions",
+        message: "Found unused definition",
         links: [],
         object: nil,
         git_blame_info: nil
@@ -31,7 +31,67 @@ Smoke.add_test(
 )
 
 Smoke.add_test(
-  "rc_path",
+  "option_target",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "src/foo.md",
+        location: { start_line: 3 },
+        id: "heading-increment",
+        message: "Heading levels should increment by one level at a time",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+      {
+        path: "docs/bar.md",
+        location: { start_line: 1 },
+        id: "no-auto-link-without-protocol",
+        message: "All automatic links must start with a protocol",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      }
+    ],
+    analyzer: { name: "remark-lint", version: "6.0.5" }
+  }
+)
+
+Smoke.add_test(
+  "option_ext",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "readme.markdown",
+        location: { start_line: 1 },
+        id: "no-auto-link-without-protocol",
+        message: "All automatic links must start with a protocol",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+      {
+        path: "readme.mdown",
+        location: { start_line: 1 },
+        id: "no-auto-link-without-protocol",
+        message: "All automatic links must start with a protocol",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      }
+    ],
+    analyzer: { name: "remark-lint", version: "6.0.5" }
+  }
+)
+
+Smoke.add_test(
+  "option_rc_path",
   {
     guid: "test-guid",
     timestamp: :_,
@@ -40,6 +100,27 @@ Smoke.add_test(
       {
         path: "readme.md",
         location: { start_line: 4 },
+        id: "no-auto-link-without-protocol",
+        message: "All automatic links must start with a protocol",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      }
+    ],
+    analyzer: { name: "remark-lint", version: "6.0.5" }
+  }
+)
+
+Smoke.add_test(
+  "option_ignore_path",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "readme.md",
+        location: { start_line: 1 },
         id: "no-auto-link-without-protocol",
         message: "All automatic links must start with a protocol",
         links: [],
@@ -91,61 +172,24 @@ Smoke.add_test(
 )
 
 Smoke.add_test(
-  "broken_sideci_yml",
+  "broken_sider_yml",
   {
     guid: "test-guid",
     timestamp: :_,
     type: "failure",
     message:
-      "The value of the attribute `$.linter.remark_lint.rc-path` in your `sideci.yml` is invalid. Please fix and retry.",
+      "The value of the attribute `$.linter.remark_lint.rc-path` in your `sider.yml` is invalid. Please fix and retry.",
     analyzer: nil
   }
 )
 
 Smoke.add_test(
-  "with_options",
+  "broken_remarkrc",
   {
     guid: "test-guid",
     timestamp: :_,
-    type: "success",
-    issues: [
-      {
-        path: "src/content.md",
-        location: { start_line: 1 },
-        id: "blockquote-indentation",
-        message: "Remove 1 space between blockquote and content",
-        links: [],
-        object: nil,
-        git_blame_info: nil
-      },
-      {
-        path: "src/content.md",
-        location: { start_line: 5 },
-        id: "blockquote-indentation",
-        message: "Remove 2 spaces between blockquote and content",
-        links: [],
-        object: nil,
-        git_blame_info: nil
-      },
-      {
-        path: "readme.md",
-        location: { start_line: 1 },
-        id: "heading-style",
-        message: "Headings should use atx",
-        links: [],
-        object: nil,
-        git_blame_info: nil
-      },
-      {
-        path: "readme.md",
-        location: { start_line: 5 },
-        id: "heading-style",
-        message: "Headings should use atx",
-        links: [],
-        object: nil,
-        git_blame_info: nil
-      }
-    ],
+    type: "failure",
+    message: "2 errors reported. See the log for details.",
     analyzer: { name: "remark-lint", version: "6.0.5" }
   }
 )
