@@ -36,7 +36,6 @@ module Runners
     }.freeze
 
     DEFAULT_TARGET = ".".freeze
-    DEFAULT_EXT = "md,markdown".freeze
 
     def analyzer_bin
       "remark"
@@ -67,11 +66,11 @@ module Runners
     private
 
     def remark_lint_version!(global: false)
-      pkg = DEFAULT_DEPS.main.name
+      pkg = "remark-lint"
       chdir = global ? Pathname(Dir.home).join(analyzer_id) : nil
       deps = list_installed_nodejs_deps only: [pkg], chdir: chdir
       deps.fetch(pkg).tap do |version|
-        raise "No version of `#{analyzer_name}`" if version.empty?
+        raise "No version of `#{pkg}`" if version.empty?
       end
     end
 
