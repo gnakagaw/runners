@@ -2,4 +2,4 @@ linter:
   remark_lint:
     target:
       - src/
-      - docs/
+      - docs/bar*.md
