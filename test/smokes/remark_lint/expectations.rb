@@ -31,6 +31,17 @@ Smoke.add_test(
 )
 
 Smoke.add_test(
+  "no_files",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [],
+    analyzer: { name: "remark-lint", version: "6.0.5" }
+  }
+)
+
+Smoke.add_test(
   "option_target",
   {
     guid: "test-guid",
@@ -127,6 +138,36 @@ Smoke.add_test(
         object: nil,
         git_blame_info: nil
       }
+    ],
+    analyzer: { name: "remark-lint", version: "6.0.5" }
+  }
+)
+
+Smoke.add_test(
+  "option_use",
+  {
+    guid: "test-guid",
+    timestamp: :_,
+    type: "success",
+    issues: [
+      {
+        path: "readme.markdown",
+        location: nil,
+        id: "file-extension",
+        message: "Invalid extension: use `md`",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
+      {
+        path: "readme.markdown",
+        location: { start_line: 1 },
+        id: "no-heading-punctuation",
+        message: "Don’t add a trailing `:` to headings",
+        links: [],
+        object: nil,
+        git_blame_info: nil
+      },
     ],
     analyzer: { name: "remark-lint", version: "6.0.5" }
   }

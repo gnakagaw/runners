@@ -9,10 +9,7 @@ module Runners
           ext: string?,
           "rc-path": string?,
           "ignore-path": string?,
-          setting: enum?(string, array(string)),
           use: enum?(string, array(string)),
-          config: boolean?,
-          ignore: boolean?,
         )
       })
     end
@@ -92,20 +89,8 @@ module Runners
       config_linter[:"ignore-path"].then { |v| v ? ["--ignore-path", v] : [] }
     end
 
-    def option_setting
-      Array(config_linter[:setting]).flat_map { |v| ["--setting", v] }
-    end
-
     def option_use
       Array(config_linter[:use]).flat_map { |v| ["--use", v] }
-    end
-
-    def option_config
-      config_linter[:config] == false ? ["--no-config"] : []
-    end
-
-    def option_ignore
-      config_linter[:ignore] == false ? ["--no-ignore"] : []
     end
 
     # @see https://github.com/unifiedjs/unified-engine/blob/master/doc/configure.md
@@ -136,11 +121,8 @@ module Runners
         *option_ext,
         *option_rc_path,
         *option_ignore_path,
-        *option_setting,
         *option_use,
         *default_preset,
-        *option_config,
-        *option_ignore,
         "--report", "vfile-reporter-json",
         "--no-color",
         "--no-stdout",
