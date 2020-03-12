@@ -26,6 +26,7 @@ module Runners
         Dependency.new(name: "remark-preset-lint-consistent", version: "2.0.3"),
         Dependency.new(name: "remark-preset-lint-markdown-style-guide", version: "2.1.3"),
         Dependency.new(name: "remark-preset-lint-recommended", version: "3.0.3"),
+        Dependency.new(name: "remark-preset-lint-sider", version: "0.1.1"),
         Dependency.new(name: "vfile-reporter-json", version: "2.0.1"),
       ],
     )
@@ -36,6 +37,7 @@ module Runners
     }.freeze
 
     DEFAULT_TARGET = ".".freeze
+    DEFAULT_PRESET = "remark-preset-lint-sider".freeze
 
     def analyzer_bin
       "remark"
@@ -74,7 +76,7 @@ module Runners
       end
     end
 
-    def option_target
+    def analysis_target
       Array(config_linter[:target] || DEFAULT_TARGET)
     end
 
@@ -106,14 +108,37 @@ module Runners
       config_linter[:ignore] == false ? ["--no-ignore"] : []
     end
 
-    def cli_args
+    # @see https://github.com/unifiedjs/unified-engine/blob/master/doc/configure.md
+    def no_rc_files?
+      Dir.glob("**/.remarkrc{,.*}", File::FNM_DOTMATCH, base: current_dir).empty?
+    end
+
+    # @see https://github.com/unifiedjs/unified-engine/blob/master/doc/configure.md
+    def no_config_in_package_json?
+      !(package_json_path.exist? && package_json.key?(:remarkConfig))
+    end
+
+    def use_default_preset?
+      !config_linter[:"rc-path"] &&
+        !config_linter[:setting] &&
+        !config_linter[:use] &&
+        !config_linter[:config] &&
+        no_rc_files? &&
+        no_config_in_package_json?
+    end
+
+    def default_preset
+      use_default_preset? ? ["--use", DEFAULT_PRESET] : []
+    end
+
+    def cli_options
       [
-        *option_target,
         *option_ext,
         *option_rc_path,
         *option_ignore_path,
         *option_setting,
         *option_use,
+        *default_preset,
         *option_config,
         *option_ignore,
         "--report", "vfile-reporter-json",
@@ -123,7 +148,7 @@ module Runners
     end
 
     def run_analyzer
-      _, stderr, _ = capture3(nodejs_analyzer_bin, *cli_args)
+      _, stderr, _ = capture3(nodejs_analyzer_bin, *cli_options, *analysis_target)
 
       Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
         parse_result(stderr) do |issue|
