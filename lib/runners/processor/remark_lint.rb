@@ -5,16 +5,19 @@ module Runners
     Schema = StrongJSON.new do
       let(:runner_config, Schema::BaseConfig.npm.update_fields { |fields|
         fields.merge!(
-          glob: string?,
-          config: string?,
+          target: enum?(string, array(string)),
+          ext: string?,
           "rc-path": string?,
-          use: string?,
-          setting: string?,
+          "ignore-path": string?,
+          setting: enum?(string, array(string)),
+          use: enum?(string, array(string)),
+          config: boolean?,
+          ignore: boolean?,
         )
       })
     end
 
-    register_config_schema(name: :remark, schema: Schema.runner_config)
+    register_config_schema(name: :remark_lint, schema: Schema.runner_config)
 
     DEFAULT_DEPS = DefaultDependencies.new(
       main: Dependency.new(name: "remark-lint", version: "6.0.5"),
@@ -31,6 +34,9 @@ module Runners
       "remark-lint" => Constraint.new(">= 6.0.0", "< 7.0.0"),
       "remark-cli" => Constraint.new(">= 7.0.0", "< 8.0.0"),
     }.freeze
+
+    DEFAULT_TARGET = ".".freeze
+    DEFAULT_EXT = "md,markdown".freeze
 
     def analyzer_bin
       "remark"
@@ -55,9 +61,7 @@ module Runners
     end
 
     def analyze(_changes)
-      check_runner_config(config_linter) do |target, options|
-        run_analyzer(target, options)
-      end
+      run_analyzer
     end
 
     private
@@ -71,70 +75,83 @@ module Runners
       end
     end
 
-    def check_runner_config(config)
-      target = target_glob config
-      rc_path = rc_path config
-      s = setting config
-      u = use config
-
-      additional_options = [rc_path, u, s].flatten.compact
-      yield target, additional_options
+    def option_target
+      Array(config_linter[:target] || DEFAULT_TARGET)
     end
 
-    def target_glob(config)
-      if config[:glob]
-        config[:glob]
-      else
-        "*.md"
-      end
+    def option_ext
+      config_linter[:ext].then { |v| v ? ["--ext", v] : [] }
     end
 
-    def rc_path(config)
-      path = config[:"rc-path"]
-      ["--rc-path", "#{path}"] if config[:"rc-path"]
+    def option_rc_path
+      config_linter[:"rc-path"].then { |v| v ? ["--rc-path", v] : [] }
     end
 
-    def setting(config)
-      setting = config[:setting]
-      ["--setting", "#{setting}"] if setting
+    def option_ignore_path
+      config_linter[:"ignore-path"].then { |v| v ? ["--ignore-path", v] : [] }
     end
 
-    def use(config)
-      use = config[:use]
-      ["--use", "#{use}"] if use
+    def option_setting
+      Array(config_linter[:setting]).flat_map { |v| ["--setting", v] }
     end
 
-    def run_analyzer(target, options)
-      _, stderr, status = capture3(
-        nodejs_analyzer_bin,
-        target,
-        "--report",
-        "vfile-reporter-json",
-        *options,
-      )
+    def option_use
+      Array(config_linter[:use]).flat_map { |v| ["--use", v] }
+    end
 
-      unless status.exited?
-        return Results::Failure.new(guid: guid, message: "Process aborted or coredumped: #{status.inspect}", analyzer: analyzer)
-      end
+    def option_config
+      config_linter[:config] == false ? ["--no-config"] : []
+    end
 
-      unless status.exitstatus == 0 || status.exitstatus == 2
-        return Results::Failure.new(guid: guid, message: stderr, analyzer: analyzer)
-      end
+    def option_ignore
+      config_linter[:ignore] == false ? ["--no-ignore"] : []
+    end
+
+    def cli_args
+      [
+        *option_target,
+        *option_ext,
+        *option_rc_path,
+        *option_ignore_path,
+        *option_setting,
+        *option_use,
+        *option_config,
+        *option_ignore,
+        "--report", "vfile-reporter-json",
+        "--no-color",
+        "--no-stdout",
+      ]
+    end
+
+    def run_analyzer
+      _, stderr, _ = capture3(nodejs_analyzer_bin, *cli_args)
 
       Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-        JSON.parse(stderr, symbolize_names: true).each do |file|
-          file[:messages].each do |message|
-            loc = Location.new(start_line: message.dig(:location, :start, :line),
-                                            start_column: nil,
-                                            end_line: message.dig(:location, :end, :line),
-                                            end_column: nil)
-            result.add_issue Issue.new(
-              path: relative_path(file[:path]),
-              location: loc,
-              id: message[:ruleId],
-              message: message[:reason],
-            )
+        parse_result(stderr) do |issue|
+          result.add_issue issue
+        end
+      end
+    end
+
+    def parse_result(output)
+      JSON.parse(output, symbolize_names: true).each do |file|
+        path = relative_path(file[:path])
+
+        file[:messages].each do |message|
+          if message[:fatal]
+            trace_writer.error <<~MSG
+              #{message[:reason]}
+              #{message[:stack]}
+            MSG
+            next
           end
+
+          yield Issue.new(
+            path: path,
+            location: message[:line].then { |line| line ? Location.new(start_line: line) : nil },
+            id: message[:ruleId],
+            message: message[:reason],
+          )
         end
       end
     end

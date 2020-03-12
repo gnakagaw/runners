@@ -1,10 +1,7 @@
 {
-  "name": "external_rules",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {},
   "dependencies": {
-    "remark-lint-books-links": "^2.1.0",
-    "remark": "11.0.2"
+    "remark-cli": "7.0.0",
+    "remark-lint": "6.0.3",
+    "remark-lint-books-links": "2.1.0"
   }
 }

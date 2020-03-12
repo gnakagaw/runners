@@ -18,7 +18,7 @@ Smoke.add_test(
       },
       {
         path: "readme.md",
-        location: { start_line: 3, end_line: 3 },
+        location: { start_line: 3 },
         id: "no-undefined-references",
         message: "Found reference to undefined definition",
         links: [],
@@ -39,7 +39,7 @@ Smoke.add_test(
     issues: [
       {
         path: "readme.md",
-        location: { start_line: 4, end_line: 4 },
+        location: { start_line: 4 },
         id: "no-auto-link-without-protocol",
         message: "All automatic links must start with a protocol",
         links: [],
@@ -60,7 +60,7 @@ Smoke.add_test(
     issues: [
       {
         path: "readme.md",
-        location: { start_line: 1, end_line: 1 },
+        location: { start_line: 1 },
         id: "books-links",
         message: "Missing PDF indication",
         links: [],
@@ -69,7 +69,7 @@ Smoke.add_test(
       },
       {
         path: "readme.md",
-        location: { start_line: 1, end_line: 1 },
+        location: { start_line: 1 },
         id: "books-links",
         message: "Missing a space before author",
         links: [],
@@ -78,7 +78,7 @@ Smoke.add_test(
       },
       {
         path: "readme.md",
-        location: { start_line: 2, end_line: 2 },
+        location: { start_line: 2 },
         id: "books-links",
         message: "Missing PDF indication",
         links: [],
@@ -86,7 +86,7 @@ Smoke.add_test(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "remark-lint", version: "6.0.5" }
+    analyzer: { name: "remark-lint", version: "6.0.3" }
   }
 )
 
@@ -97,7 +97,7 @@ Smoke.add_test(
     timestamp: :_,
     type: "failure",
     message:
-      "The value of the attribute `$.linter.remark.rc-path` in your `sideci.yml` is invalid. Please fix and retry.",
+      "The value of the attribute `$.linter.remark_lint.rc-path` in your `sideci.yml` is invalid. Please fix and retry.",
     analyzer: nil
   }
 )
@@ -129,7 +129,7 @@ Smoke.add_test(
       },
       {
         path: "readme.md",
-        location: { start_line: 1, end_line: 1 },
+        location: { start_line: 1 },
         id: "heading-style",
         message: "Headings should use atx",
         links: [],
@@ -138,7 +138,7 @@ Smoke.add_test(
       },
       {
         path: "readme.md",
-        location: { start_line: 5, end_line: 6 },
+        location: { start_line: 5 },
         id: "heading-style",
         message: "Headings should use atx",
         links: [],
