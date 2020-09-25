@@ -4,7 +4,7 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 FROM sider/devon_rex_java:2.15.0
 
-ARG JAVASEE_VERSION=0.1.3
+ARG JAVASEE_VERSION=0.2.0
 USER root
 RUN mkdir /tmp/javasee_work && \
     cd /tmp/javasee_work && \
