@@ -359,6 +359,29 @@ class ProcessorTest < Minitest::Test
     end
   end
 
+  def test_timeout_capture3
+    with_workspace do |workspace|
+      processor = new_processor(workspace: workspace)
+
+      # Simulate timeout status
+      mock_status = Minitest::Mock.new
+      mock_status.expect(:success?,  false)
+      mock_status.expect(:exited?, false)
+      mock_status.expect(:signaled?,  true)
+      mock_status.expect(:termsig, 12)
+      # 12 is the signal number of SIGUSR2 for Linux on x86 architecture
+      # See: https://man7.org/linux/man-pages/man7/signal.7.html
+
+      Open3.stub :capture3, ["", "", mock_status] do
+        processor.capture3 "/bin/echo"
+
+        assert_mock mock_status
+
+        refute trace_writer.writer.find {|hash| hash[:trace] == :status && hash[:status] == 0 }
+        assert trace_writer.writer.find {|hash| hash[:trace] == :error && hash[:message].include?("Analysis timeout (30 minutes)")}
+      end
+    end
+  end
   def test_env_hash
     with_workspace do |workspace|
       processor = new_processor(workspace: workspace)
