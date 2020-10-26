@@ -347,6 +347,10 @@ class ProcessorTest < Minitest::Test
       mock_status = Minitest::Mock.new
       mock_status.expect(:success?, false)
       mock_status.expect(:exited?, false)
+      mock_status.expect(:signaled?, true)
+      mock_status.expect(:termsig, 6)
+      # 6 is the signal number of SIGABRT for Linux on x86 architecture
+      # See: https://man7.org/linux/man-pages/man7/signal.7.html
 
       Open3.stub :capture3, ["", "", mock_status] do
         processor.capture3 "/bin/echo"
