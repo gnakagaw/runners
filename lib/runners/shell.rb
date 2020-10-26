@@ -115,8 +115,13 @@ module Runners
         trace_writer.stderr stderr_str if trace_stderr
 
         if status.exited?
+          # normal case
           trace_writer.status status if trace_command_line
+        elsif status.signaled? && status.termsig == 12
+          # timeout
+          trace_writer.error "Analysis timeout (30 minutes)"
         else
+          # other failure
           trace_writer.error "Process aborted or coredumped: #{status.inspect}"
         end
 
