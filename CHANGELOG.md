@@ -38,6 +38,7 @@ Misc:
 
 - **HAML-Lint** Add `parallel` option [#1582](https://github.com/sider/runners/pull/1582)
 - **stylelint** Add `stylelint-config-recommended-scss` [#1557](https://github.com/sider/runners/pull/1557)
+- Implement analyse timeout message [#1600](https://github.com/sider/runners/pull/1600)
 
 ## 0.36.1
 
