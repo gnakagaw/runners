@@ -122,7 +122,7 @@ module Runners
           trace_writer.status status if trace_command_line
         elsif status.termsig == SIGUSR2
           # timeout
-          trace_writer.error "Analysis timeout (30 minutes)"
+          trace_writer.error "Analysis timeout (#{ENV.fetch('RUNNERS_TIMEOUT')})"
         else
           # other failure
           trace_writer.error "Process aborted or coredumped: #{status.inspect}"

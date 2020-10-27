@@ -369,6 +369,7 @@ class ProcessorTest < Minitest::Test
       mock_status.expect(:success?,  false)
       mock_status.expect(:exited?, false)
       mock_status.expect(:termsig, Signal.list.fetch('USR2'))
+      ENV["RUNNERS_TIMEOUT"] = "30m"
 
       Open3.stub :capture3, ["", "", mock_status] do
         processor.capture3 "/bin/echo"
@@ -376,7 +377,7 @@ class ProcessorTest < Minitest::Test
         assert_mock mock_status
 
         refute trace_writer.writer.find {|hash| hash[:trace] == :status && hash[:status] == 0 }
-        assert trace_writer.writer.find {|hash| hash[:trace] == :error && hash[:message].include?("Analysis timeout (30 minutes)")}
+        assert trace_writer.writer.find {|hash| hash[:trace] == :error && hash[:message].include?("Analysis timeout (#{ENV.fetch('RUNNERS_TIMEOUT')})")}
       end
     end
   end
