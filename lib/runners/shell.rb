@@ -39,6 +39,9 @@ module Runners
     attr_reader :current_dir
     attr_reader :env_hash_stack
 
+    # signal number for analyse timeout
+    SIGUSR2 = Signal.list.fetch('USR2')
+
     def initialize(current_dir:, trace_writer:, env_hash:)
       @trace_writer = trace_writer
       @current_dir = current_dir
@@ -117,7 +120,7 @@ module Runners
         if status.exited?
           # normal case
           trace_writer.status status if trace_command_line
-        elsif status.signaled? && status.termsig == 12
+        elsif status.termsig == SIGUSR2
           # timeout
           trace_writer.error "Analysis timeout (30 minutes)"
         else
