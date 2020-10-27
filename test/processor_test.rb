@@ -380,6 +380,7 @@ class ProcessorTest < Minitest::Test
       end
     end
   end
+
   def test_env_hash
     with_workspace do |workspace|
       processor = new_processor(workspace: workspace)
