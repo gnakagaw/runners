@@ -284,6 +284,7 @@ module Runners
                              guid: "test-guid",
                              timestamp: :_,
                              issues: nil,
+                             metrics: nil,
                              message: nil,
                              analyzer: nil,
                              class: nil,
@@ -300,6 +301,7 @@ module Runners
             timestamp: timestamp,
             **({
               issues: issues,
+              metrics: metrics,
               message: message,
               analyzer: analyzer,
               class: binding.local_variable_get(:class),
