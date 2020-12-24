@@ -80,6 +80,8 @@ analyzers:
     github: languagetool-org/languagetool
     doc: tools/others/languagetool
     dependabot: false
+  metrics_fileinfo:
+    name: Metrics File Info
   misspell:
     name: Misspell
     github: client9/misspell
