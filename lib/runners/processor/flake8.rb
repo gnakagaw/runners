@@ -36,12 +36,10 @@ module Runners
 
     def analyze(changes)
       capture3!(
-        "timeout", # This is a debug code for an investigation task. Please remove this line before a runner release.
-        "1m", # This is a debug code for an investigation task. Please remove this line before a runner release.
         analyzer_bin,
         "-v", # This is a debug code for an investigation task. Please remove this line before a runner release.
         "--exit-zero",
-        # "--output-file", report_file,
+        "--output-file", report_file,
         "--format", OUTPUT_FORMAT,
         "--append-config", IGNORED_CONFIG_PATH,
         *(config_linter[:config]&.then { |c| ["--config", c] }),
