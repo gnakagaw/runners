@@ -37,7 +37,6 @@ module Runners
     def analyze(changes)
       capture3!(
         analyzer_bin,
-        "-v", # This is a debug code for an investigation task. Please remove this line before a runner release.
         "--exit-zero",
         "--output-file", report_file,
         "--format", OUTPUT_FORMAT,
