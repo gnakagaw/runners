@@ -78,7 +78,7 @@ module Runners
               path: relative_path(_ = path),
               location: Location.new(start_line: line, start_column: column),
               id: id,
-              message: message,
+              message: (_ = message),
               )
         end
       end
