@@ -75,7 +75,7 @@ module Runners
         l.match(OUTPUT_PATTERN) do |match|
           _, id, path, line, column, message = match.to_a
           yield Issue.new(
-              path: relative_path(path),
+              path: relative_path(_ = path),
               location: Location.new(start_line: line, start_column: column),
               id: id,
               message: message,
