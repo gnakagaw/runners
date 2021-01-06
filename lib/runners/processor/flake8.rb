@@ -38,7 +38,6 @@ module Runners
       # modify output for debugging. Revert before release.
       stdout, _ = capture3!(
         analyzer_bin,
-        "-vv", # This is a debug code. Remove before release.
         "--exit-zero",
         "--format", OUTPUT_FORMAT,
         "--append-config", IGNORED_CONFIG_PATH,
@@ -71,17 +70,14 @@ module Runners
     end
 
     def parse_result(output)
-      # modifed for debug. revert before release
-      output.split(/\R/).each do |l|
-        l.match(OUTPUT_PATTERN) do |match|
-          _, id, path, line, column, message = match.to_a
-          yield Issue.new(
-              path: relative_path(_ = path),
-              location: Location.new(start_line: line, start_column: column),
-              id: id,
-              message: (_ = message),
-              )
-        end
+      output.scan(OUTPUT_PATTERN) do |match|
+        id, path, line, column, message = match
+        yield Issue.new(
+          path: relative_path(path),
+          location: Location.new(start_line: line, start_column: column),
+          id: id,
+          message: message,
+        )
       end
     end
   end
