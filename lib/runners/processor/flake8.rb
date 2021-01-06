@@ -36,7 +36,10 @@ module Runners
 
     def analyze(changes)
       capture3!(
+        "timeout", # This is a debug code. Remove before release.
+        "10m", # This is a debug code. Remove before release
         analyzer_bin,
+        "-vv", # This is a debug code. Remove before release.
         "--exit-zero",
         "--output-file", report_file,
         "--format", OUTPUT_FORMAT,
@@ -69,14 +72,17 @@ module Runners
     end
 
     def parse_result(output)
-      output.scan(OUTPUT_PATTERN) do |match|
-        id, path, line, column, message = match
-        yield Issue.new(
-          path: relative_path(path),
-          location: Location.new(start_line: line, start_column: column),
-          id: id,
-          message: message,
-        )
+      # modifed for debug. revert before release
+      output.split(/\R/).each do |l|
+        l.match(OUTPUT_PATTERN) do |match|
+          _, id, path, line, column, message = match.to_a
+          yield Issue.new(
+              path: relative_path(path),
+              location: Location.new(start_line: line, start_column: column),
+              id: id,
+              message: message,
+              )
+        end
       end
     end
   end
