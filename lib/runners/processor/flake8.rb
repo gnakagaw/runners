@@ -35,17 +35,17 @@ module Runners
     end
 
     def analyze(changes)
-      # modify output for debugging. Revert before release.
-      stdout, _ = capture3!(
+      capture3!(
         analyzer_bin,
         "--exit-zero",
+        "--output-file", report_file,
         "--format", OUTPUT_FORMAT,
         "--append-config", IGNORED_CONFIG_PATH,
         "-j", "1",
         *(config_linter[:config]&.then { |c| ["--config", c] }),
         *Array(config_linter[:target] || DEFAULT_TARGET),
       )
-      output = stdout
+      output = read_report_file
 
       Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
         next if output.empty?
