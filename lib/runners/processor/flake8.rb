@@ -36,8 +36,6 @@ module Runners
 
     def analyze(changes)
       capture3!(
-        "timeout", # This is a debug code. Remove before release.
-        "10m", # This is a debug code. Remove before release
         analyzer_bin,
         "-vv", # This is a debug code. Remove before release.
         "--exit-zero",
