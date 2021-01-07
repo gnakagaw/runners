@@ -42,6 +42,7 @@ module Runners
         "--exit-zero",
         "--format", OUTPUT_FORMAT,
         "--append-config", IGNORED_CONFIG_PATH,
+        "-j", "1",
         *(config_linter[:config]&.then { |c| ["--config", c] }),
         *Array(config_linter[:target] || DEFAULT_TARGET),
       )
