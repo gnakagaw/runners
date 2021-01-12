@@ -19,12 +19,13 @@ module Runners
       include Minitest::Assertions
 
       class TestParams
-        attr_reader :name, :pattern, :offline
+        attr_reader :name, :pattern, :offline, :use_git_metadata
 
-        def initialize(name:, pattern:, offline:)
+        def initialize(name:, pattern:, offline:, use_git_metadata:)
           @name = name
           @pattern = pattern
           @offline = offline
+          @use_git_metadata = use_git_metadata
         end
 
         def ==(other)
@@ -109,11 +110,19 @@ module Runners
 
       def run_test(params, out)
         command_output, _ = Dir.mktmpdir do |dir|
-          repo_dir, base, head = prepare_git_repository(
-            workdir: Pathname(dir).realpath,
-            smoke_target: expectations.parent.join(params.name).realpath,
-            out: out,
-          )
+          if params.use_git_metadata
+            repo_dir, base, head = setup_existing_git_repository(
+                workdir: Pathname(dir).realpath,
+                smoke_target: expectations.parent.join(params.name).realpath,
+                out: out,
+                )
+          else
+            repo_dir, base, head = prepare_git_repository(
+                workdir: Pathname(dir).realpath,
+                smoke_target: expectations.parent.join(params.name).realpath,
+                out: out,
+                )
+          end
           cmd = command_line(params: params, repo_dir: repo_dir, base: base, head: head)
           sh!(*cmd, out: out, exception: false)
         end
@@ -204,6 +213,17 @@ module Runners
         end
       end
 
+      def setup_existing_git_repository(workdir:, smoke_target:, out:)
+        smoke_dir = workdir.join("smoke").to_path
+        FileUtils.copy_entry "#{smoke_target}", smoke_dir
+
+        Dir.chdir(smoke_dir) do
+          head_commit, _ = sh! "git", "rev-parse", "HEAD", out: out
+          # TODO: Ignored Steep error
+          _ = [smoke_dir, nil, head_commit.chomp]
+        end
+      end
+
       def debug?
         ENV["DEBUG"] == "true"
       end
@@ -270,11 +290,19 @@ module Runners
       end
 
       def self.add_test(name, **pattern)
-        add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: false)
+        add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: false, use_git_metadata: false)
       end
 
       def self.add_offline_test(name, **pattern)
-        add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: true)
+        add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: true, use_git_metadata: false)
+      end
+
+      def self.add_test_with_git_metadata(name, **pattern)
+        add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: false, use_git_metadata: true)
+      end
+
+      def self.add_offline_test_with_git_metadata(name, **pattern)
+        add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: true, use_git_metadata: true)
       end
 
       def self.add_test_helper(test)
