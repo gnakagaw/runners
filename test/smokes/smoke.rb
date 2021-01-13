@@ -110,18 +110,15 @@ module Runners
 
       def run_test(params, out)
         command_output, _ = Dir.mktmpdir do |dir|
+          repo_args = {
+              workdir: Pathname(dir).realpath,
+              smoke_target: expectations.parent.join(params.name).realpath,
+              out: out,
+          }
           if params.use_git_metadata
-            repo_dir, base, head = prepare_existing_git_repository(
-                workdir: Pathname(dir).realpath,
-                smoke_target: expectations.parent.join(params.name).realpath,
-                out: out,
-                )
+            repo_dir, base, head = prepare_existing_git_repository(**repo_args)
           else
-            repo_dir, base, head = prepare_new_git_repository(
-                workdir: Pathname(dir).realpath,
-                smoke_target: expectations.parent.join(params.name).realpath,
-                out: out,
-                )
+            repo_dir, base, head = prepare_new_git_repository(**repo_args)
           end
           cmd = command_line(params: params, repo_dir: repo_dir, base: base, head: head)
           sh!(*cmd, out: out, exception: false)
