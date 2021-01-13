@@ -111,13 +111,13 @@ module Runners
       def run_test(params, out)
         command_output, _ = Dir.mktmpdir do |dir|
           if params.use_git_metadata
-            repo_dir, base, head = setup_existing_git_repository(
+            repo_dir, base, head = prepare_existing_git_repository(
                 workdir: Pathname(dir).realpath,
                 smoke_target: expectations.parent.join(params.name).realpath,
                 out: out,
                 )
           else
-            repo_dir, base, head = prepare_git_repository(
+            repo_dir, base, head = prepare_new_git_repository(
                 workdir: Pathname(dir).realpath,
                 smoke_target: expectations.parent.join(params.name).realpath,
                 out: out,
@@ -187,7 +187,7 @@ module Runners
         commands
       end
 
-      def prepare_git_repository(workdir:, smoke_target:, out:)
+      def prepare_new_git_repository(workdir:, smoke_target:, out:)
         # Create a bare repository
         bare_dir = workdir.join("bare").to_path
         sh! "git", "init", "--bare", bare_dir, out: out
@@ -213,7 +213,7 @@ module Runners
         end
       end
 
-      def setup_existing_git_repository(workdir:, smoke_target:, out:)
+      def prepare_existing_git_repository(workdir:, smoke_target:, out:)
         smoke_dir = workdir.join("smoke").to_path
         FileUtils.copy_entry smoke_target, smoke_dir
 
