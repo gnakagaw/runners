@@ -215,7 +215,7 @@ module Runners
 
       def setup_existing_git_repository(workdir:, smoke_target:, out:)
         smoke_dir = workdir.join("smoke").to_path
-        FileUtils.copy_entry "#{smoke_target}", smoke_dir
+        FileUtils.copy_entry smoke_target, smoke_dir
 
         Dir.chdir(smoke_dir) do
           head_commit, _ = sh! "git", "rev-parse", "HEAD", out: out
