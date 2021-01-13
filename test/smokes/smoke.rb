@@ -215,6 +215,7 @@ module Runners
         FileUtils.copy_entry smoke_target, smoke_dir
 
         Dir.chdir(smoke_dir) do
+          FileUtils.move "gitmetadata", ".git"
           head_commit, _ = sh! "git", "rev-parse", "HEAD", out: out
           [smoke_dir, nil, head_commit.chomp]
         end
@@ -293,6 +294,8 @@ module Runners
         add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: true, use_git_metadata: false)
       end
 
+      # for runners using git metadata for their analysis.
+      # You have to place git metadata directory (.git/) as "gitmetadata" in the test case directory.
       def self.add_test_with_git_metadata(name, **pattern)
         add_test_helper TestParams.new(name: name, pattern: build_pattern(**pattern), offline: false, use_git_metadata: true)
       end
