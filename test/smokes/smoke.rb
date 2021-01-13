@@ -219,8 +219,7 @@ module Runners
 
         Dir.chdir(smoke_dir) do
           head_commit, _ = sh! "git", "rev-parse", "HEAD", out: out
-          # TODO: Ignored Steep error
-          _ = [smoke_dir, nil, head_commit.chomp]
+          [smoke_dir, nil, head_commit.chomp]
         end
       end
 
