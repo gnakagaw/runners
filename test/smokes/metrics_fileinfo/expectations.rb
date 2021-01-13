@@ -13,7 +13,9 @@ s.add_test_with_git_metadata(
         object: {
           line_of_code: 10,
           last_commit_datetime: "2020-01-01T10:00:00+09:00"
-        }
+        },
+        git_blame_info: nil
       }
-    ] }
+    ],
+    analyzer: { name: "Metrics File Info", version: "8.30" } }
 )
