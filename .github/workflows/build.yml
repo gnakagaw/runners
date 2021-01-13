@@ -49,6 +49,7 @@ jobs:
           - ktlint
           - languagetool
           - misspell
+          - metrics_fileinfo
           - phinder
           - phpmd
           - pmd_cpd
