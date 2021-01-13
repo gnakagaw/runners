@@ -8,11 +8,11 @@ s.add_test_with_git_metadata(
         id: "metrics_fileinfo",
         path: "hello.rb",
         location: nil,
-        message: "hello.rb: loc = 7, last commit datetime = 2020-01-01T10:00:00+09:00",
+        message: "hello.rb: loc = 7, last commit datetime = 2021-01-01T10:00:00+09:00",
         links: [],
         object: {
-          line_of_code: 10,
-          last_commit_datetime: "2020-01-01T10:00:00+09:00"
+          line_of_code: 7,
+          last_commit_datetime: "2021-01-01T10:00:00+09:00"
         },
         git_blame_info: nil
       }
