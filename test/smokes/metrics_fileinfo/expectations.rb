@@ -1,19 +1,18 @@
 s = Runners::Testing::Smoke
 
-s.add_test(
+s.add_test_with_git_metadata(
   "success",
   { type: "success",
     issues: [
       {
         id: "metrics_fileinfo",
-        path: "dummy.txt",
+        path: "hello.rb",
         location: nil,
-        message: nil,
+        message: "hello.rb: loc = 7, last commit datetime = 2020-01-01T10:00:00+09:00",
         links: [],
         object: {
           line_of_code: 10,
-          last_commit_datetime: "2020-01-04"
-
+          last_commit_datetime: "2020-01-01T10:00:00+09:00"
         }
       }
     ] }
