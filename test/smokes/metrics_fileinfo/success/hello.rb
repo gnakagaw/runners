@@ -1,6 +1,6 @@
 # A just simple ruby program
 def hello
-  put "Hello, world"
+  puts "Hello, world"
 end
 
 hello
