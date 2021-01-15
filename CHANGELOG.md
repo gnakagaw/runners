@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 [Full diff](https://github.com/sider/runners/compare/0.40.5...HEAD)
 
 - **ESLint** Add `eslint-plugin-cypress` to pre-installed packages [#1936](https://github.com/sider/runners/pull/1936)
-- Add a new smoke test type using git metadata [#1931](https://github.com/sider/runners/pull/1931)
+
 ## 0.40.5
 
 [Full diff](https://github.com/sider/runners/compare/0.40.4...0.40.5)
