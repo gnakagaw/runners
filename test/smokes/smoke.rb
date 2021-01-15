@@ -111,9 +111,9 @@ module Runners
       def run_test(params, out)
         command_output, _ = Dir.mktmpdir do |dir|
           repo_args = {
-              workdir: Pathname(dir).realpath,
-              smoke_target: expectations.parent.join(params.name).realpath,
-              out: out,
+            workdir: Pathname(dir).realpath,
+            smoke_target: expectations.parent.join(params.name).realpath,
+            out: out,
           }
           if params.use_git_metadata
             repo_dir, base, head = prepare_existing_git_repository(**repo_args)
