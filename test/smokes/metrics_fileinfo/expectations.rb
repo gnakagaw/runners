@@ -1,5 +1,7 @@
 s = Runners::Testing::Smoke
 
+default_version = "8.30"
+
 s.add_test_with_git_metadata(
   "success",
   { type: "success",
@@ -17,7 +19,7 @@ s.add_test_with_git_metadata(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "Metrics File Info", version: "8.30" } }
+    analyzer: { name: "Metrics File Info", version: default_version } }
 )
 
 s.add_test_with_git_metadata(
@@ -48,7 +50,7 @@ s.add_test_with_git_metadata(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "Metrics File Info", version: "8.30" } }
+    analyzer: { name: "Metrics File Info", version: default_version } }
 )
 
 s.add_test_with_git_metadata(
@@ -68,5 +70,5 @@ s.add_test_with_git_metadata(
         git_blame_info: nil
       }
     ],
-    analyzer: { name: "Metrics File Info", version: "8.30" } }
+    analyzer: { name: "Metrics File Info", version: default_version } }
 )
