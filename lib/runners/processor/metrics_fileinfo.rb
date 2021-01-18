@@ -52,11 +52,13 @@ module Runners
             )
       end
     end
+
     def analyze_line_of_code(target_files)
       target_files.map do |file|
         unless is_text_file?(file)
           next [file, nil]
         end
+
         stdout, _, _ = capture3!("wc", "-l", file)
         loc, _ = stdout.split(" ")
         [file, loc.to_i]
