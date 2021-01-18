@@ -28,7 +28,7 @@ s.add_test_with_git_metadata(
         id: "metrics_fileinfo",
         path: "image.png",
         location: nil,
-        message: "image.png: loc = (nil), last commit datetime = 2021-01-01T13:00:00+09:00",
+        message: "image.png: loc = , last commit datetime = 2021-01-01T13:00:00+09:00",
         links: [],
         object: {
           line_of_code: nil,
@@ -39,7 +39,7 @@ s.add_test_with_git_metadata(
         id: "metrics_fileinfo",
         path: "no_text.txt",
         location: nil,
-        message: "no_text.txt: loc = (nil), last commit datetime = 2021-01-01T14:00:00+09:00",
+        message: "no_text.txt: loc = , last commit datetime = 2021-01-01T14:00:00+09:00",
         links: [],
         object: {
           line_of_code: nil,
