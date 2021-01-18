@@ -68,18 +68,18 @@ module Runners
       end.to_h
     end
 
-    def is_text_file?(target_file)
-      stdout, _, _ = capture3!("file", "-E", "-b", target_file)
-      stdout.split(",").any? do |type|
-        FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS.any? { |t| type.include?(t) }
-      end
-    end
-
     def analyze_last_commit_date(target_files)
       target_files.map do |file|
         stdout, _, _  = capture3!("git", "log", "-1", "--format=format:%aI", file)
         [file, stdout]
       end.to_h
+    end
+
+    def is_text_file?(target_file)
+      stdout, _, _ = capture3!("file", "-E", "-b", target_file)
+      stdout.split(",").any? do |type|
+        FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS.any? { |t| type.include?(t) }
+      end
     end
   end
 end
