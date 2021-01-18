@@ -1,6 +1,8 @@
 module Runners
   class Processor::MetricsFileInfo < Processor
     Schema = _ = StrongJSON.new do
+      # @type self: SchemaClass
+
       let :runner_config, Schema::BaseConfig.base
       let :issue, object(
           line_of_code: integer?,
@@ -11,8 +13,9 @@ module Runners
     FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS = ["ASCII text", "UTF-8 Unicode text", "ISO-8859 text"].freeze
 
     def analyzer_version
-      stdout, _, _ = capture3!("wc", "--version")
-      stdout.split(/\R/)[0][/\d*\.\d*/]
+      @analyzer_version ||= capture3!("wc", "--version").then do |stdout, |
+        stdout.split(/\R/)[0][/\d*\.\d*/].then {|ver| ver.nil? ? "unknown" : ver}
+      end
     end
 
     # This analyser use git metadata (.git/).
@@ -55,13 +58,12 @@ module Runners
 
     def analyze_line_of_code(target_files)
       target_files.map do |file|
-        unless is_text_file?(file)
-          next [file, nil]
+        if is_text_file?(file)
+          loc, _ = capture3!("wc", "-l", file).then { |stdout, | stdout.split(" ")}
+          [file, loc.to_i]
+        else
+          [file, nil]
         end
-
-        stdout, _, _ = capture3!("wc", "-l", file)
-        loc, _ = stdout.split(" ")
-        [file, loc.to_i]
       end.to_h
     end
 
