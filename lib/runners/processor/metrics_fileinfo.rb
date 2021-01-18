@@ -39,9 +39,9 @@ module Runners
       Dir.glob("**/*", File::FNM_DOTMATCH).reject { |e| File.directory? e or e.start_with? ".git/" }
     end
 
-    def generate_issues(loc_info, commit_date_info)
+    def generate_issues(loc_info, commit_datetime_info)
       loc_info.map do |fname, loc|
-        commit_datetime = commit_date_info[fname]
+        commit_datetime = commit_datetime_info[fname]
         Issue.new(
             path: relative_path(fname),
             location: nil,
@@ -59,8 +59,7 @@ module Runners
     def analyze_line_of_code(target_files)
       target_files.map do |file|
         if is_text_file?(file)
-          loc, _ = capture3!("wc", "-l", file).then { |stdout, | stdout.split(" ")}
-          [file, loc.to_i]
+          capture3!("wc", "-l", file).then { |stdout, | [file, stdout.split(" ")[0].to_i]}
         else
           [file, nil]
         end
