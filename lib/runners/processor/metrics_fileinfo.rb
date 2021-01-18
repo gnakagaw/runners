@@ -23,32 +23,11 @@ module Runners
     def analyze(_changes)
       target_files = generate_file_list
       loc = analyze_line_of_code(target_files)
-      last_commit_date = analyze_last_commit_date(target_files)
+      last_commit_datetime = analyze_last_commit_date(target_files)
 
-      fileinfo = loc.merge(last_commit_date) do |_, loc, last_commit_date|
-        { loc: loc, last_commit_date: last_commit_date }
+      Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
+        generate_issues(loc, last_commit_datetime).each { |issue| result.add_issue(issue) }
       end
-
-      result = Results::Success.new(guid: guid, analyzer: analyzer)
-      fileinfo.each do |file, metrics|
-        loc = metrics[:loc]
-        commit_date = metrics[:last_commit_date]
-
-        result.add_issue(
-            Issue.new(
-                path: relative_path(file),
-                location: nil,
-                id: "metrics_fileinfo",
-                message: "#{file}: loc = #{loc}, last commit datetime = #{commit_date}",
-                object: {
-                    line_of_code: loc,
-                    last_commit_datetime: commit_date
-                },
-                schema: Schema.issue,
-                )
-        )
-      end
-      result
     end
 
     private
@@ -57,6 +36,22 @@ module Runners
       Dir.glob("**/*", File::FNM_DOTMATCH).reject { |e| File.directory? e or e.start_with? ".git/" }
     end
 
+    def generate_issues(loc_info, commit_date_info)
+      loc_info.map do |fname, loc|
+        commit_datetime = commit_date_info[fname]
+        Issue.new(
+            path: relative_path(fname),
+            location: nil,
+            id: "metrics_fileinfo",
+            message: "#{fname}: loc = #{loc}, last commit datetime = #{commit_datetime}",
+            object: {
+                line_of_code: loc,
+                last_commit_datetime: commit_datetime
+            },
+            schema: Schema.issue,
+            )
+      end
+    end
     def analyze_line_of_code(target_files)
       target_files.map do |file|
         unless is_text_file?(file)
