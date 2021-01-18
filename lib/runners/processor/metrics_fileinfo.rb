@@ -8,7 +8,6 @@ module Runners
       )
     end
 
-    FILE_COMMAND_OUTPUT_PATTERN = /^(.+?:) (.*)/.freeze
     FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS = ["ASCII text", "UTF-8 Unicode text", "ISO-8859 text"].freeze
 
     def analyzer_version
@@ -70,8 +69,8 @@ module Runners
     end
 
     def is_text_file?(target_file)
-      stdout, _, _ = capture3!("file", "-E", target_file)
-      FILE_COMMAND_OUTPUT_PATTERN.match(stdout).to_a[2].split(",").any? do |type|
+      stdout, _, _ = capture3!("file", "-E", "-b", target_file)
+      stdout.split(",").any? do |type|
         FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS.any? { |t| type.include?(t) }
       end
     end
