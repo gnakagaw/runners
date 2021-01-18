@@ -128,3 +128,23 @@ s.add_test_with_git_metadata(
     ],
     analyzer: { name: "Metrics File Info", version: default_version } }
 )
+
+s.add_test_with_git_metadata(
+  "multi_commit",
+  { type: "success",
+    issues: [
+      {
+        id: "metrics_fileinfo",
+        path: "hello.rb",
+        location: nil,
+        message: "hello.rb: loc = 9, last commit datetime = 2021-01-01T12:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 9,
+          last_commit_datetime: "2021-01-01T12:00:00+09:00"
+        },
+        git_blame_info: nil
+      }
+    ],
+    analyzer: { name: "Metrics File Info", version: default_version } }
+)
