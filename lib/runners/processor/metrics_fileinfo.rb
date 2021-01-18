@@ -23,7 +23,7 @@ module Runners
     def analyze(_changes)
       target_files = generate_file_list
       loc = analyze_line_of_code(target_files)
-      last_commit_datetime = analyze_last_commit_date(target_files)
+      last_commit_datetime = analyze_last_commit_datetime(target_files)
 
       Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
         generate_issues(loc, last_commit_datetime).each { |issue| result.add_issue(issue) }
@@ -65,7 +65,7 @@ module Runners
       end.to_h
     end
 
-    def analyze_last_commit_date(target_files)
+    def analyze_last_commit_datetime(target_files)
       target_files.map do |file|
         stdout, _, _  = capture3!("git", "log", "-1", "--format=format:%aI", file)
         [file, stdout]
