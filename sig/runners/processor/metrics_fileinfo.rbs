@@ -6,17 +6,19 @@ module Runners
     end
     Schema: SchemaClass
 
+    FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS: Array[String]
+
     private
 
     def generate_file_list: () -> Array[String]
 
-    def generate_issues: (Hash[String, int], Hash[String, String])-> Array[Issue]
+    def generate_issues: (Hash[String, int | nil], Hash[String, String])-> Array[Issue]
 
-    def analyze_line_of_code: (String) -> Array[String, Integer]
+    def analyze_line_of_code: (Array[String]) -> Hash[String, int | nil]
 
-    def analyze_last_commit_datetime: (String) -> Array[String, String]
+    def analyze_last_commit_datetime: (Array[String]) -> Hash[String, String]
 
-    def is_text_files?: (String) -> bool
+    def is_text_file?: (String) -> bool
 
   end
 end
