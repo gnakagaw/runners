@@ -23,11 +23,11 @@ module Runners
 
     def analyze(_changes)
       target_files = generate_file_list
-      loc = analyze_line_of_code(target_files)
-      last_commit_datetime = analyze_last_commit_datetime(target_files)
 
       Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-        generate_issues(loc, last_commit_datetime).each { |issue| result.add_issue(issue) }
+        target_files.each do |file|
+          result.add_issue(generate_issue(file, analyze_line_of_code(file), analyze_last_commit_datetime(file)))
+        end
       end
     end
 
@@ -37,38 +37,26 @@ module Runners
       Dir.glob("**/*", File::FNM_DOTMATCH).reject { |e| File.directory? e or e.start_with? ".git/" }
     end
 
-    def generate_issues(loc_info, commit_datetime_info)
-      loc_info.map do |fname, loc|
-        commit_datetime = commit_datetime_info[fname]
-        Issue.new(
-          path: relative_path(fname),
-          location: nil,
-          id: "metrics_fileinfo",
-          message: "#{fname}: loc = #{loc}, last commit datetime = #{commit_datetime}",
-          object: {
-            line_of_code: loc,
-            last_commit_datetime: commit_datetime
-          },
-          schema: Schema.issue,
-        )
-      end
+    def generate_issue(file, loc, commit_datetime)
+      Issue.new(
+        path: relative_path(file),
+        location: nil,
+        id: "metrics_fileinfo",
+        message: "#{file}: loc = #{loc}, last commit datetime = #{commit_datetime}",
+        object: {
+          line_of_code: loc,
+          last_commit_datetime: commit_datetime
+        },
+        schema: Schema.issue
+      )
     end
 
-    def analyze_line_of_code(target_files)
-      target_files.map do |file|
-        if is_text_file?(file)
-          capture3!("wc", "-l", file).then { |stdout,| [file, Integer(stdout.split(" ")[0])] }
-        else
-          [file, nil]
-        end
-      end.to_h
+    def analyze_line_of_code(target_file)
+      is_text_file?(target_file) ? capture3!("wc", "-l", target_file).then {|stdout,| Integer(stdout.split(" ")[0])} : nil
     end
 
-    def analyze_last_commit_datetime(target_files)
-      target_files.map do |file|
-        stdout, _, _ = capture3!("git", "log", "-1", "--format=format:%aI", file)
-        [file, stdout]
-      end.to_h
+    def analyze_last_commit_datetime(target_file)
+      capture3!("git", "log", "-1", "--format=format:%aI", target_file).then {|stdout,| stdout}
     end
 
     def is_text_file?(target_file)
