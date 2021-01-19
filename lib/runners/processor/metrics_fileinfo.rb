@@ -5,16 +5,16 @@ module Runners
 
       let :runner_config, Schema::BaseConfig.base
       let :issue, object(
-          line_of_code: integer?,
-          last_commit_datetime: string
+        line_of_code: integer?,
+        last_commit_datetime: string
       )
     end
 
     FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS = ["ASCII text", "UTF-8 Unicode text", "ISO-8859 text"].freeze
 
     def analyzer_version
-      @analyzer_version ||= capture3!("wc", "--version").then do |stdout, |
-        stdout.split(/\R/)[0][/\d*\.\d*/].then {|ver| ver.nil? ? "unknown" : ver}
+      @analyzer_version ||= capture3!("wc", "--version").then do |stdout,|
+        stdout.split(/\R/)[0][/\d*\.\d*/].then { |ver| ver.nil? ? "unknown" : ver }
       end
     end
 
@@ -43,23 +43,23 @@ module Runners
       loc_info.map do |fname, loc|
         commit_datetime = commit_datetime_info[fname]
         Issue.new(
-            path: relative_path(fname),
-            location: nil,
-            id: "metrics_fileinfo",
-            message: "#{fname}: loc = #{loc}, last commit datetime = #{commit_datetime}",
-            object: {
-                line_of_code: loc,
-                last_commit_datetime: commit_datetime
-            },
-            schema: Schema.issue,
-            )
+          path: relative_path(fname),
+          location: nil,
+          id: "metrics_fileinfo",
+          message: "#{fname}: loc = #{loc}, last commit datetime = #{commit_datetime}",
+          object: {
+            line_of_code: loc,
+            last_commit_datetime: commit_datetime
+          },
+          schema: Schema.issue,
+        )
       end
     end
 
     def analyze_line_of_code(target_files)
       target_files.map do |file|
         if is_text_file?(file)
-          capture3!("wc", "-l", file).then { |stdout, | [file, Integer(stdout.split(" ")[0])]}
+          capture3!("wc", "-l", file).then { |stdout,| [file, Integer(stdout.split(" ")[0])] }
         else
           [file, nil]
         end
@@ -68,7 +68,7 @@ module Runners
 
     def analyze_last_commit_datetime(target_files)
       target_files.map do |file|
-        stdout, _, _  = capture3!("git", "log", "-1", "--format=format:%aI", file)
+        stdout, _, _ = capture3!("git", "log", "-1", "--format=format:%aI", file)
         [file, stdout]
       end.to_h
     end
