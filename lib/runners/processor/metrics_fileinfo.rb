@@ -72,9 +72,8 @@ module Runners
     end
 
     def is_text_file?(target_file)
-      stdout, _, _ = capture3!("file", "-E", "-b", target_file)
-      stdout.split(",").any? do |type|
-        FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS.any? { |t| type.include?(t) }
+      capture3!("git", "ls-files", "--eol", "--error-unmatch", target_file).then do |stdout, _, _|
+        stdout.split(" ")[1].match?("w/-text") ? false : true
       end
     end
   end

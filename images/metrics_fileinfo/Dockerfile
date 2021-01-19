@@ -4,14 +4,6 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 FROM sider/devon_rex_base:2.28.0
 
-# install file command (file type guesser)
-USER root
-RUN apt-get update -y && \
-    apt-get install -qq -y --no-install-recommends file="1:5.35-4+deb10u1" && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-USER $RUNNER_USER
-
 
 ARG RUNNERS_DIR=${RUNNER_USER_HOME}/runners
 
