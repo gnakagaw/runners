@@ -148,3 +148,83 @@ s.add_test_with_git_metadata(
     ],
     analyzer: { name: "Metrics File Info", version: default_version } }
 )
+
+s.add_test_with_git_metadata(
+  "directory_hierarchy",
+  { type: "success",
+    issues: [
+      {
+        id: "metrics_fileinfo",
+        path: "README.txt",
+        location: nil,
+        message: "README.txt: loc = 2, last commit datetime = 2021-01-01T14:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 2,
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
+        },
+        git_blame_info: nil
+      },
+      {
+        id: "metrics_fileinfo",
+        path: "lib/about_libs.txt",
+        location: nil,
+        message: "lib/about_libs.txt: loc = 1, last commit datetime = 2021-01-01T14:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 1,
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
+        },
+        git_blame_info: nil
+      },
+      {
+        id: "metrics_fileinfo",
+        path: "lib/libbar/libbar.rb",
+        location: nil,
+        message: "lib/libbar/libbar.rb: loc = 5, last commit datetime = 2021-01-01T14:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 5,
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
+        },
+        git_blame_info: nil
+      },
+      {
+        id: "metrics_fileinfo",
+        path: "lib/libfoo/libfoo.rb",
+        location: nil,
+        message: "lib/libfoo/libfoo.rb: loc = 5, last commit datetime = 2021-01-01T14:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 5,
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
+        },
+        git_blame_info: nil
+      },
+      {
+        id: "metrics_fileinfo",
+        path: "src/main.rb",
+        location: nil,
+        message: "src/main.rb: loc = 5, last commit datetime = 2021-01-01T14:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 5,
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
+        },
+        git_blame_info: nil
+      },
+      {
+        id: "metrics_fileinfo",
+        path: "src/module_piyo/piyo.rb",
+        location: nil,
+        message: "src/module_piyo/piyo.rb: loc = 6, last commit datetime = 2021-01-01T14:00:00+09:00",
+        links: [],
+        object: {
+          line_of_code: 6,
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
+        },
+        git_blame_info: nil
+      }
+    ],
+    analyzer: { name: "Metrics File Info", version: default_version } }
+)
