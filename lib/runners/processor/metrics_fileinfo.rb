@@ -10,8 +10,6 @@ module Runners
       )
     end
 
-    FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS = ["ASCII text", "UTF-8 Unicode text", "ISO-8859 text"].freeze
-
     def analyzer_version
       @analyzer_version ||= extract_version!("wc")
     end

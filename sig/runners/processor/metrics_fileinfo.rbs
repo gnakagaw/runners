@@ -6,8 +6,6 @@ module Runners
     end
     Schema: SchemaClass
 
-    FILE_COMMAND_VALID_PLAIN_TEXT_FORMATS: Array[String]
-
     private
 
     def generate_issue: (Pathname, (int | nil), String)-> Issue
