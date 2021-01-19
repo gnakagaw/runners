@@ -82,6 +82,8 @@ analyzers:
     dependabot: false
   metrics_fileinfo:
     name: Metrics File Info
+    github: coreutils/coreutils
+    doc: tools/metrics/fileinfo
   misspell:
     name: Misspell
     github: client9/misspell
