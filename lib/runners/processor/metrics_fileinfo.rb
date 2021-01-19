@@ -21,28 +21,22 @@ module Runners
       true
     end
 
-    def analyze(_changes)
-      target_files = generate_file_list
-
+    def analyze(changes)
       Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-        target_files.each do |file|
-          result.add_issue(generate_issue(file, analyze_line_of_code(file), analyze_last_commit_datetime(file)))
+        changes.changed_paths.each do |path|
+          result.add_issue(generate_issue(path, analyze_line_of_code(path), analyze_last_commit_datetime(path)))
         end
       end
     end
 
     private
 
-    def generate_file_list
-      Dir.glob("**/*", File::FNM_DOTMATCH).reject { |e| File.directory? e or e.start_with? ".git/" }
-    end
-
-    def generate_issue(file, loc, commit_datetime)
+    def generate_issue(path, loc, commit_datetime)
       Issue.new(
-        path: relative_path(file),
+        path: relative_path(path),
         location: nil,
         id: "metrics_fileinfo",
-        message: "#{file}: loc = #{loc}, last commit datetime = #{commit_datetime}",
+        message: "#{path_str(path)}: loc = #{loc}, last commit datetime = #{commit_datetime}",
         object: {
           line_of_code: loc,
           last_commit_datetime: commit_datetime
@@ -51,18 +45,22 @@ module Runners
       )
     end
 
-    def analyze_line_of_code(target_file)
-      is_text_file?(target_file) ? capture3!("wc", "-l", target_file).then {|stdout,| Integer(stdout.split(" ")[0])} : nil
+    def analyze_line_of_code(path)
+      is_text_file?(path) ? capture3!("wc", "-l", path_str(path)).then {|stdout,| Integer(stdout.split(" ")[0])} : nil
     end
 
-    def analyze_last_commit_datetime(target_file)
-      capture3!("git", "log", "-1", "--format=format:%aI", target_file).then {|stdout,| stdout}
+    def analyze_last_commit_datetime(path)
+      capture3!("git", "log", "-1", "--format=format:%aI", path_str(path)).then {|stdout,| stdout}
     end
 
-    def is_text_file?(target_file)
-      capture3!("git", "ls-files", "--eol", "--error-unmatch", target_file).then do |stdout, _, _|
+    def is_text_file?(path)
+      capture3!("git", "ls-files", "--eol", "--error-unmatch", path_str(path)).then do |stdout, _, _|
         stdout.split(" ")[1].match?("w/-text") ? false : true
       end
+    end
+
+    def path_str(path)
+      relative_path(path).to_s
     end
   end
 end
