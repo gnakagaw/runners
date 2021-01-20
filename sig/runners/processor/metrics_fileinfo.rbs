@@ -16,6 +16,5 @@ module Runners
 
     def is_text_file?: (String) -> bool
 
-    def path_str: (Pathname) -> String
   end
 end
