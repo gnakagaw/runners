@@ -6,7 +6,7 @@ module Runners
       let :runner_config, Schema::BaseConfig.base
       let :issue, object(
         line_of_code: integer?,
-        last_commit_datetime: string
+        last_commit_datetime: integer
       )
     end
 
@@ -29,6 +29,7 @@ module Runners
 
     private
 
+
     def generate_issue(path)
       filepath = relative_path(path).to_s
       loc = analyze_line_of_code(filepath)
@@ -41,7 +42,7 @@ module Runners
         message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit}",
         object: {
           line_of_code: loc,
-          last_commit_datetime: last_commit
+          last_commit_datetime: Time.parse(last_commit).to_i
         },
         schema: Schema.issue
       )
