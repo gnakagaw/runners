@@ -42,7 +42,7 @@ module Runners
         message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit_iso}",
         object: {
           line_of_code: loc,
-          last_commit_datetime: last_commit_epoch.to_i
+          last_commit_datetime: Integer(last_commit_epoch)
         },
         schema: Schema.issue
       )
@@ -53,7 +53,8 @@ module Runners
     end
 
     def analyze_last_commit_datetime(target)
-      capture3!("git", "log", "-1", "--format=format:%aI|%at", target).then {|stdout,| stdout.split("|")}
+      last_commit = capture3!("git", "log", "-1", "--format=format:%aI|%at", target).then { |stdout,| stdout.split("|")}
+      [last_commit[0], last_commit[1]]
     end
 
     def is_text_file?(target)

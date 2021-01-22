@@ -12,7 +12,7 @@ module Runners
 
     def analyze_line_of_code: (String) -> (nil | int)
 
-    def analyze_last_commit_datetime: (String) -> Array[String]
+    def analyze_last_commit_datetime: (String) -> [String, String]
 
     def is_text_file?: (String) -> bool
 
