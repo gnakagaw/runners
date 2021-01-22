@@ -33,16 +33,16 @@ module Runners
     def generate_issue(path)
       filepath = relative_path(path).to_s
       loc = analyze_line_of_code(filepath)
-      last_commit = analyze_last_commit_datetime(filepath)
+      last_commit_iso, last_commit_epoch = analyze_last_commit_datetime(filepath)
 
       Issue.new(
         path: relative_path(path),
         location: nil,
         id: "metrics_fileinfo",
-        message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit}",
+        message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit_iso}",
         object: {
           line_of_code: loc,
-          last_commit_datetime: Time.parse(last_commit).to_i
+          last_commit_datetime: last_commit_epoch.to_i
         },
         schema: Schema.issue
       )
@@ -53,7 +53,7 @@ module Runners
     end
 
     def analyze_last_commit_datetime(target)
-      capture3!("git", "log", "-1", "--format=format:%aI", target).then {|stdout,| stdout}
+      capture3!("git", "log", "-1", "--format=format:%aI|%at", target).then {|stdout,| stdout.split("|")}
     end
 
     def is_text_file?(target)
