@@ -56,6 +56,40 @@ module Runners
       [last_commit[0], last_commit[1]]
     end
 
+    # There may not be a perfect method to discriminate file type.
+    # We determined to use 'git ls-file' command with '--eol' option based on an evaluation.
+    #  the target methods: mimemagic library, file(1) command, git ls-files --eol.
+    #
+    # 1. mimemagic library (https://rubygems.org/gems/mimemagic/)
+    # Pros:
+    #   * A Gem library. We can install easily.
+    #   * It seems to be well-maintained now.
+    # Cons:
+    #   * This library cannot distinguish between a plain text file and a binary file.
+    #
+    # 2. file(1) command (https://linux.die.net/man/1/file)
+    # Pros:
+    #   * This is a well-known method to inspect file type.
+    # Cons:
+    #   * We have to install an additional package on devon_rex_base.
+    #   * File type classification for plain text is too detailed. File type string varies based on the target file encoding.
+    #     * e.g.  ASCII text, ISO-8859 text, ASCII text with escape sequence, UTF-8 Unicode text, Non-ISO extended-ASCII test, and so on.
+    #
+    # 3. git ls-files --eol (See: https://git-scm.com/docs/git-ls-files#Documentation/git-ls-files.txt---eol)
+    #  Pros:
+    #    * We don't need any additional packages.
+    #    * It output whether the target file is text or not. (This is the information we need)
+    #    * The output is reliable to some extent because Git is a very well maintained and used OSS product.
+    #  Cons:
+    #    * (no issue found)
+    #
+    # We've tested some ambiguous cases in binary_files, multi_language, and unknown_extension smoke test cases.
+    # We can determine file type correctly in cases as below.
+    #  * A plain text file having various extensions (.txt, .rb, .md, etc..)
+    #  * A binary file having various extensions (.png, .data, etc...)
+    #  * A binary file, but having .txt extension. (e.g. no_text.txt)
+    #  * A text files not encoded in UTF-8 but EUC-JP, ISO-2022-JP, Shift JIS.
+    #  * A text file having a non-well-known extension. (e.g. foo.my_original_extension )
     def text_file?(target)
       capture3!("git", "ls-files", "--eol", "--error-unmatch", target).then do |stdout, _, _|
         stdout.split(" ")[1].match?("w/-text") ? false : true
