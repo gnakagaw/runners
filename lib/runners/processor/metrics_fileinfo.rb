@@ -20,11 +20,11 @@ module Runners
     end
 
     def analyze(changes)
-      Results::Success.new(guid: guid, analyzer: analyzer).tap do |result|
-        changes.changed_paths.each do |path|
-          result.add_issue(generate_issue(path))
-        end
-      end
+      Results::Success.new(
+        guid: guid,
+        analyzer: analyzer,
+        issues: changes.changed_paths.map { |path| generate_issue(path) }
+      )
     end
 
     private
