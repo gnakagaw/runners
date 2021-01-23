@@ -14,7 +14,7 @@ module Runners
 
     def analyze_last_commit_datetime: (String) -> [String, String]
 
-    def is_text_file?: (String) -> bool
+    def text_file?: (String) -> bool
 
   end
 end

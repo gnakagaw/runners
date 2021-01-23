@@ -47,7 +47,7 @@ module Runners
     end
 
     def analyze_line_of_code(target)
-      is_text_file?(target) ? capture3!("wc", "-l", target).then {|stdout,| Integer(stdout.split(" ")[0])} : nil
+      text_file?(target) ? capture3!("wc", "-l", target).then {|stdout,| Integer(stdout.split(" ")[0])} : nil
     end
 
     def analyze_last_commit_datetime(target)
@@ -55,7 +55,7 @@ module Runners
       [last_commit[0], last_commit[1]]
     end
 
-    def is_text_file?(target)
+    def text_file?(target)
       capture3!("git", "ls-files", "--eol", "--error-unmatch", target).then do |stdout, _, _|
         stdout.split(" ")[1].match?("w/-text") ? false : true
       end
