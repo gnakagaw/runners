@@ -1,6 +1,6 @@
 s = Runners::Testing::Smoke
 
-default_version = "8.30"
+default_version = Runners::VERSION
 
 s.add_test_with_git_metadata(
   "success",

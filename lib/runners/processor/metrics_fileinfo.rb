@@ -11,7 +11,7 @@ module Runners
     end
 
     def analyzer_version
-      @analyzer_version ||= extract_version!("wc")
+      Runners::VERSION
     end
 
     # This analyser use git metadata (.git/).
