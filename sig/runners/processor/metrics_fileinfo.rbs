@@ -10,7 +10,7 @@ module Runners
 
     def generate_issue: (Pathname)-> Issue
 
-    def analyze_line_of_code: (String) -> Integer?
+    def analyze_line_of_code: (String) -> Integer
 
     def analyze_last_commit_datetime: (String) -> [String, String]
 

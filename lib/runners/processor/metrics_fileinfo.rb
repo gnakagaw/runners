@@ -30,7 +30,7 @@ module Runners
     private
     def generate_issue(path)
       filepath = relative_path(path)
-      loc = analyze_line_of_code(filepath.to_path)
+      loc = text_file?(filepath.to_path) ? analyze_line_of_code(filepath.to_path) : nil
       last_commit_iso, last_commit_epoch = analyze_last_commit_datetime(filepath.to_path)
 
       Issue.new(
@@ -47,7 +47,8 @@ module Runners
     end
 
     def analyze_line_of_code(target)
-      text_file?(target) ? capture3!("wc", "-l", target).then {|stdout,| Integer(stdout.split(" ")[0])} : nil
+      stdout, _ = capture3!("wc", "-l", target)
+      Integer(stdout.split(" ")[0])
     end
 
     def analyze_last_commit_datetime(target)
