@@ -28,8 +28,6 @@ module Runners
     end
 
     private
-
-
     def generate_issue(path)
       filepath = relative_path(path).to_s
       loc = analyze_line_of_code(filepath)
