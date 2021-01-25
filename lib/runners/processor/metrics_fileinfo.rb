@@ -28,6 +28,7 @@ module Runners
     end
 
     private
+
     def generate_issue(path)
       filepath = relative_path(path)
       loc = text_file?(filepath.to_path) ? analyze_line_of_code(filepath.to_path) : nil
