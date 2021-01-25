@@ -29,12 +29,12 @@ module Runners
 
     private
     def generate_issue(path)
-      filepath = relative_path(path).to_s
-      loc = analyze_line_of_code(filepath)
-      last_commit_iso, last_commit_epoch = analyze_last_commit_datetime(filepath)
+      filepath = relative_path(path)
+      loc = analyze_line_of_code(filepath.to_path)
+      last_commit_iso, last_commit_epoch = analyze_last_commit_datetime(filepath.to_path)
 
       Issue.new(
-        path: relative_path(path),
+        path: filepath,
         location: nil,
         id: "metrics_fileinfo",
         message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit_iso}",
