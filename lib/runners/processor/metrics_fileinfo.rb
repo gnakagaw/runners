@@ -53,7 +53,8 @@ module Runners
     end
 
     def analyze_last_commit_datetime(target)
-      capture3!("git", "log", "-1", "--format=format:%aI", target)[0]
+      stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", target)
+      stdout
     end
 
 
