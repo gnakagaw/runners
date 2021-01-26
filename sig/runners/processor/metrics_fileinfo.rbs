@@ -14,7 +14,10 @@ module Runners
 
     def analyze_last_commit_datetime: (String) -> [String, String]
 
+    def text_files: () -> Set[String]
+
     def text_file?: (String) -> bool
 
+    def search_text_files: (Set[Pathname]) -> nil
   end
 end
