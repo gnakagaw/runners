@@ -56,9 +56,6 @@ module Runners
       capture3!("git", "log", "-1", "--format=format:%aI", target)[0]
     end
 
-    def text_files
-      @text_files ||= search_text_files
-    end
 
     def text_file?(target)
       text_files.include?(target)
@@ -98,8 +95,8 @@ module Runners
     #  * A binary file, but having .txt extension. (e.g. no_text.txt)
     #  * A text files not encoded in UTF-8 but EUC-JP, ISO-2022-JP, Shift JIS.
     #  * A text file having a non-well-known extension. (e.g. foo.my_original_extension )
-    def search_text_files
-      Set[].tap do |result|
+    def text_files
+      @text_files ||= Set[].tap do |result|
         stdout, _ = capture3!("git", "ls-files", "--eol", "--error-unmatch", trace_stdout: false)
         stdout.each_line(chomp: true) do |line|
           fields = line.split(" ")

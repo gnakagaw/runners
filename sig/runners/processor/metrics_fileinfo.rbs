@@ -18,6 +18,5 @@ module Runners
 
     def text_file?: (String) -> bool
 
-    def search_text_files: () -> Set[String]
   end
 end
