@@ -10,13 +10,16 @@ module Runners
 
     def generate_issue: (Pathname)-> Issue
 
-    def analyze_line_of_code: (String) -> Integer
+    def lines_of_code: () -> Hash[String, Integer]
 
-    def analyze_last_commit_datetime: (String) -> String
+    def analyze_lines_of_code: (Array[Pathname]) -> nil
+
+    def last_committed_at: () -> Hash[String, String]
+
+    def analyze_last_committed_at: (Array[Pathname]) -> nil
 
     def text_files: () -> Set[String]
 
     def text_file?: (String) -> bool
-
   end
 end

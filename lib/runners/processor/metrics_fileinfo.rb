@@ -5,7 +5,7 @@ module Runners
 
       let :runner_config, Schema::BaseConfig.base
       let :issue, object(
-        line_of_code: integer?,
+        lines_of_code: integer?,
         last_committed_at: string
       )
     end
@@ -20,46 +20,70 @@ module Runners
     end
 
     def analyze(changes)
+      targets = changes.changed_paths.map { |x| relative_path(x)}
+      analyze_last_committed_at(targets)
+      analyze_lines_of_code(targets)
+
       Results::Success.new(
         guid: guid,
         analyzer: analyzer,
-        issues: changes.changed_paths.map { |path| generate_issue(path) }
+        issues: targets.map { |path| generate_issue(path) }
       )
     end
 
     private
 
     def generate_issue(path)
-      filepath = relative_path(path)
-      loc = text_file?(filepath.to_path) ? analyze_line_of_code(filepath.to_path) : nil
-      last_commit = analyze_last_commit_datetime(filepath.to_path)
+      filename = path.to_path
+      loc = lines_of_code[filename]
+      commit = last_committed_at[filename]
 
       Issue.new(
-        path: filepath,
+        path: path,
         location: nil,
         id: "metrics_fileinfo",
-        message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit}",
+        message: "#{filename}: loc = #{loc}, last commit datetime = #{commit}",
         object: {
-          line_of_code: loc,
-          last_committed_at: last_commit
+          lines_of_code: loc,
+          last_committed_at: commit
         },
         schema: Schema.issue
       )
     end
 
-    def analyze_line_of_code(target)
-      stdout, _ = capture3!("wc", "-l", target)
-      Integer(stdout.split(" ")[0])
+    def lines_of_code
+      @lines_of_code ||= {}
     end
 
-    def analyze_last_commit_datetime(target)
-      stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", target)
-      stdout
+    def analyze_lines_of_code(targets)
+      text_files = targets.map(&:to_path).select { |f| text_file?(f) }
+      text_files.each_slice(1000) do |files|
+        stdout, _ = capture3!("wc", "-l", *files)
+        lines = stdout.lines(chomp: true).tap do |l|
+          # wc command outputs total count when we pass multiple targets. remove it if exist
+          last_line = (l.last or break)
+          l.pop if last_line.match?(/^\d+ total$/)
+        end
+        lines.each do |line|
+          fields = line.split(" ")
+          loc = (fields[0] or raise)
+          fname = (fields[1] or raise)
+          lines_of_code[fname] = Integer(loc)
+        end
+      end
     end
 
+    def last_committed_at
+      @last_committed_at ||= {}
+    end
 
-    def text_file?(target)
-      text_files.include?(target)
+    def analyze_last_committed_at(targets)
+      targets.each do |target|
+        path = target.to_path
+        stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", path)
+        last_committed_at[path] = stdout
+      end
+      nil
     end
 
     # There may not be a perfect method to discriminate file type.
@@ -108,6 +132,10 @@ module Runners
           end
         end
       end
+    end
+
+    def text_file?(target)
+      text_files.include?(target)
     end
   end
 end
