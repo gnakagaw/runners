@@ -14,7 +14,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 7,
-          last_commit_datetime: 1_609_462_800
+          last_commit_datetime: "2021-01-01T10:00:00+09:00"
         },
         git_blame_info: nil
       }
@@ -34,7 +34,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: nil,
-          last_commit_datetime: 1_609_473_600
+          last_commit_datetime: "2021-01-01T13:00:00+09:00"
         },
         git_blame_info: nil
       }, {
@@ -45,7 +45,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: nil,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       }
@@ -65,7 +65,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 2,
-          last_commit_datetime: 1_609_466_400
+          last_commit_datetime: "2021-01-01T11:00:00+09:00"
         },
         git_blame_info: nil
       }
@@ -85,7 +85,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 1,
-          last_commit_datetime: 1_609_470_000
+          last_commit_datetime: "2021-01-01T12:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -97,7 +97,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 1,
-          last_commit_datetime: 1_609_473_600
+          last_commit_datetime: "2021-01-01T13:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -109,7 +109,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 1,
-          last_commit_datetime: 1_609_466_400
+          last_commit_datetime: "2021-01-01T11:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -121,7 +121,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 7,
-          last_commit_datetime: 1_609_462_800
+          last_commit_datetime: "2021-01-01T10:00:00+09:00"
         },
         git_blame_info: nil
       }
@@ -141,7 +141,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 9,
-          last_commit_datetime: 1_609_470_000
+          last_commit_datetime: "2021-01-01T12:00:00+09:00"
         },
         git_blame_info: nil
       }
@@ -161,7 +161,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 2,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -173,7 +173,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 1,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -185,7 +185,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 5,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -197,7 +197,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 5,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -209,7 +209,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 5,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       },
@@ -221,7 +221,7 @@ s.add_test_with_git_metadata(
         links: [],
         object: {
           line_of_code: 6,
-          last_commit_datetime: 1_609_477_200
+          last_commit_datetime: "2021-01-01T14:00:00+09:00"
         },
         git_blame_info: nil
       }

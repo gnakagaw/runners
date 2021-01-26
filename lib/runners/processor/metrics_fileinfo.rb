@@ -6,7 +6,7 @@ module Runners
       let :runner_config, Schema::BaseConfig.base
       let :issue, object(
         line_of_code: integer?,
-        last_commit_datetime: integer
+        last_commit_datetime: string
       )
     end
 
@@ -33,16 +33,16 @@ module Runners
     def generate_issue(path)
       filepath = relative_path(path)
       loc = text_file?(filepath.to_path) ? analyze_line_of_code(filepath.to_path) : nil
-      last_commit_iso, last_commit_epoch = analyze_last_commit_datetime(filepath.to_path)
+      last_commit = analyze_last_commit_datetime(filepath.to_path)
 
       Issue.new(
         path: filepath,
         location: nil,
         id: "metrics_fileinfo",
-        message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit_iso}",
+        message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit}",
         object: {
           line_of_code: loc,
-          last_commit_datetime: Integer(last_commit_epoch)
+          last_commit_datetime: last_commit
         },
         schema: Schema.issue
       )
@@ -54,8 +54,7 @@ module Runners
     end
 
     def analyze_last_commit_datetime(target)
-      last_commit = capture3!("git", "log", "-1", "--format=format:%aI|%at", target).then { |stdout,| stdout.split("|")}
-      [last_commit[0], last_commit[1]]
+      capture3!("git", "log", "-1", "--format=format:%aI", target)[0]
     end
 
     def text_files
