@@ -41,7 +41,7 @@ module Runners
         message: "#{filepath}: loc = #{loc}, last commit datetime = #{last_commit}",
         object: {
           line_of_code: loc,
-          last_commit_datetime: last_commit
+          last_committed_at: last_commit
         },
         schema: Schema.issue
       )
