@@ -20,7 +20,6 @@ module Runners
     end
 
     def analyze(changes)
-      search_text_files(changes.changed_paths)
       Results::Success.new(
         guid: guid,
         analyzer: analyzer,
@@ -58,7 +57,7 @@ module Runners
     end
 
     def text_files
-      @text_files ||= Set[]
+      @text_files ||= search_text_files
     end
 
     def text_file?(target)
@@ -99,16 +98,15 @@ module Runners
     #  * A binary file, but having .txt extension. (e.g. no_text.txt)
     #  * A text files not encoded in UTF-8 but EUC-JP, ISO-2022-JP, Shift JIS.
     #  * A text file having a non-well-known extension. (e.g. foo.my_original_extension )
-    def search_text_files(paths)
-      # NOTE: Use `each_slice` to avoid arguments length limit.
-      paths.each_slice(10000) do |targets|
-        stdout, _ = capture3!("git", "ls-files", "--eol", "--error-unmatch", *targets.map(&:to_path), trace_stdout: false)
+    def search_text_files
+      Set[].tap do |result|
+        stdout, _ = capture3!("git", "ls-files", "--eol", "--error-unmatch", trace_stdout: false)
         stdout.each_line(chomp: true) do |line|
           fields = line.split(" ")
           type = (fields[1] or raise)
           file = (fields[3] or raise)
           if type != "w/-text"
-            text_files << file
+            result << file
           end
         end
       end
