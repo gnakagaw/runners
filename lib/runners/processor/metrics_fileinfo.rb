@@ -6,7 +6,7 @@ module Runners
       let :runner_config, Schema::BaseConfig.base
       let :issue, object(
         line_of_code: integer?,
-        last_commit_datetime: string
+        last_committed_at: string
       )
     end
 
