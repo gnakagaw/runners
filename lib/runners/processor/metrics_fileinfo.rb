@@ -20,14 +20,13 @@ module Runners
     end
 
     def analyze(changes)
-      targets = changes.changed_paths.map { |x| relative_path(x)}
-      analyze_last_committed_at(targets)
-      analyze_lines_of_code(targets)
+      analyze_last_committed_at(changes.changed_paths)
+      analyze_lines_of_code(changes.changed_paths)
 
       Results::Success.new(
         guid: guid,
         analyzer: analyzer,
-        issues: targets.map { |path| generate_issue(path) }
+        issues: changes.changed_paths.map { |path| generate_issue(path) }
       )
     end
 
