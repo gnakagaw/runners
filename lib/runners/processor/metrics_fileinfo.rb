@@ -41,7 +41,7 @@ module Runners
         path: Pathname(path),
         location: nil,
         id: "metrics_fileinfo",
-        message: "#{path}: loc = #{loc}, last commit datetime = #{commit}",
+        message: "#{path}: loc = #{loc || "(no loc info)"}, last commit datetime = #{commit}",
         object: {
           lines_of_code: loc,
           last_committed_at: commit
