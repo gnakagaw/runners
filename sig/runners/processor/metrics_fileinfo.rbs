@@ -16,7 +16,7 @@ module Runners
 
     def last_committed_at: () -> Hash[String, String]
 
-    def analyze_last_committed_at: (Set[Pathname]) -> nil
+    def analyze_last_committed_at: (Set[Pathname]) -> Set[Pathname]
 
     def text_files: () -> Set[String]
 

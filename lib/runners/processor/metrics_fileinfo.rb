@@ -82,7 +82,6 @@ module Runners
         stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", path)
         last_committed_at[path] = stdout
       end
-      nil
     end
 
     # There may not be a perfect method to discriminate file type.
