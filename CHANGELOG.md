@@ -30,6 +30,7 @@ Misc:
 
 - Improve behavior about `Changes` class [#1955](https://github.com/sider/runners/pull/1955)
 - Improve `Runners::Config::Error` classes [#1959](https://github.com/sider/runners/pull/1959) [#1961](https://github.com/sider/runners/pull/1961) [#1972](https://github.com/sider/runners/pull/1972)
+- Add **Metrics File Info** runner [#1937](https://github.com/sider/runners/pull/1937)
 
 ## 0.40.7
 
