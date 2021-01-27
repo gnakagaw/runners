@@ -12,11 +12,11 @@ module Runners
 
     def lines_of_code: () -> Hash[String, Integer]
 
-    def analyze_lines_of_code: (Set[Pathname]) -> nil
+    def analyze_lines_of_code: (Set[Pathname]) -> void
 
     def last_committed_at: () -> Hash[String, String]
 
-    def analyze_last_committed_at: (Set[Pathname]) -> Set[Pathname]
+    def analyze_last_committed_at: (Set[Pathname]) -> void
 
     def text_files: () -> Set[String]
 
