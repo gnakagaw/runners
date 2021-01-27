@@ -20,28 +20,28 @@ module Runners
     end
 
     def analyze(changes)
-      analyze_last_committed_at(changes.changed_paths)
-      analyze_lines_of_code(changes.changed_paths)
+      target_files = changes.changed_paths.map(&:to_path)
+      analyze_last_committed_at(target_files)
+      analyze_lines_of_code(target_files)
 
       Results::Success.new(
         guid: guid,
         analyzer: analyzer,
-        issues: changes.changed_paths.map { |path| generate_issue(path) }
+        issues: target_files.map { |path| generate_issue(path) }
       )
     end
 
     private
 
     def generate_issue(path)
-      filename = path.to_path
-      loc = lines_of_code[filename]
-      commit = last_committed_at[filename]
+      loc = lines_of_code[path]
+      commit = last_committed_at[path]
 
       Issue.new(
-        path: path,
+        path: Pathname(path),
         location: nil,
         id: "metrics_fileinfo",
-        message: "#{filename}: loc = #{loc}, last commit datetime = #{commit}",
+        message: "#{path}: loc = #{loc}, last commit datetime = #{commit}",
         object: {
           lines_of_code: loc,
           last_committed_at: commit
@@ -55,7 +55,7 @@ module Runners
     end
 
     def analyze_lines_of_code(targets)
-      text_files = targets.map(&:to_path).select { |f| text_file?(f) }
+      text_files = targets.select { |f| text_file?(f) }
       text_files.each_slice(1000) do |files|
         stdout, _ = capture3!("wc", "-l", *files)
         lines = stdout.lines(chomp: true).tap do |l|
@@ -78,9 +78,8 @@ module Runners
 
     def analyze_last_committed_at(targets)
       targets.each do |target|
-        path = target.to_path
-        stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", path)
-        last_committed_at[path] = stdout
+        stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", target)
+        last_committed_at[target] = stdout
       end
     end
 
