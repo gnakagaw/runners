@@ -35,7 +35,7 @@ module Runners
 
     def generate_issue(path)
       loc = lines_of_code[path]
-      commit = last_committed_at[path]
+      commit = last_committed_at.fetch(path)
 
       Issue.new(
         path: Pathname(path),
