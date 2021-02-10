@@ -88,6 +88,13 @@ Then, install Git hooks via [Lefthook](https://github.com/Arkweid/lefthook):
 $ bundle exec lefthook install
 ```
 
+Install [RBS collection for RubyGems](https://github.com/ruby/gem_rbs_collection) via [git submodule](https://git-scm.com/docs/git-submodule):
+
+```shell-session
+$ git submodule init
+$ git submodule update
+```
+
 Last, run the following command to show available commands in the project:
 
 ```shell-session
@@ -190,6 +197,8 @@ To update the third-party gems' RBS, run:
 ```shell-session
 $ bundle exec rake rbs:update_gems
 ```
+
+If you get a `Unexpected error reported` error, ensure that you've got RBS for gems. See [Setup](#setup) section.
 
 ## License
 
