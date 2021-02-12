@@ -23,7 +23,7 @@ module Runners
       # Generate pre-computed cache for Git metadata access (https://git-scm.com/docs/git-commit-graph)
       # This improves the performance of access to Git metadata for a large repository.
       # You can see the efficacy here: https://github.com/sider/runners/issues/2028#issuecomment-776534408
-      capture3!("git","commit-graph" , "write", "--reachable", "--changed-paths")
+      capture3!("git","commit-graph", "write", "--reachable", "--changed-paths")
 
       target_files = changes.changed_paths.map(&:to_path)
       analyze_last_committed_at(target_files)
