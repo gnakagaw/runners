@@ -28,7 +28,7 @@ Misc:
 - **RuboCop** Set up default config only when no user config [#2020](https://github.com/sider/runners/pull/2020)
 - **Metrics Complexity** Run lizard as single thread to avoid timeout error [#2019](https://github.com/sider/runners/pull/2019)
 - **Metrics Code Clone** Force to set the option `--skip-lexical-errors` of PMD CPD to avoid Lexical error [#2050](https://github.com/sider/runners/pull/2050)
-- **Metrics FileInfo** Improvement analysis performance with pre-computed git metadata cache [#2051](https://github.com/sider/runners/pull/2051)
+- **Metrics File Info** Improve analysis performance with pre-computed git metadata cache [#2051](https://github.com/sider/runners/pull/2051)
 
 ## 0.41.1
 
