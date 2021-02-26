@@ -24,7 +24,7 @@ module Runners
       # You can see the efficacy here: https://github.com/sider/runners/issues/2028#issuecomment-776534408
       capture3!("git", "commit-graph", "write", "--reachable", "--changed-paths", "--no-progress")
 
-      target_files = Pathname.glob("**/*",File::FNM_DOTMATCH).filter do |path|
+      target_files = Pathname.glob("**/*", File::FNM_DOTMATCH).filter do |path|
         path.file? && !path.fnmatch?("**/.git/*", File::FNM_DOTMATCH)
       end
 
