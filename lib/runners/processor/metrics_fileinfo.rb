@@ -84,11 +84,11 @@ module Runners
     end
 
     def analyze_last_committed_at(targets)
-      trace_writer.message "Analyzing last commit time..."
-
-      targets.each do |target|
-        stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", "--", target, trace_stdout: false, trace_command_line: false)
-        last_committed_at[target] = stdout
+      trace_writer.message "Analyzing last commit time..." do
+        targets.each do |target|
+          stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", "--", target, trace_stdout: false, trace_command_line: false)
+          last_committed_at[target] = stdout
+        end
       end
     end
 
