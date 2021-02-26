@@ -27,6 +27,19 @@ module Runners
     DEFAULT_TARGET = ".".freeze
     DEFAULT_CONFIG_FILE = (Pathname(Dir.home) / "sider_recommended_checkstyle.xml").to_path.freeze
 
+    def self.config_example
+      <<~'YAML'
+        root_dir: project/
+        jvm_deps:
+          - [com.github.sevntu-checkstyle, sevntu-checks, 1.37.1]
+        config: custom-checkstyle.xml
+        dir: src/
+        exclude: vendor/
+        ignore: [warning, info]
+        properties: custom-checkstyle.properties
+      YAML
+    end
+
     def setup
       begin
         install_jvm_deps

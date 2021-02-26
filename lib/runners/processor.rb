@@ -9,14 +9,9 @@ module Runners
       Schema::Config.register(name: name, schema: schema)
     end
 
-    # TODO: Keep the following schemas for the backward compatibility.
-    RemovedGoToolSchema = _ = StrongJSON.new do
-      # @type self: RemovedGoToolSchemaClass
-      let :config, any?
+    def self.config_example
+      raise NotImplementedError, name
     end
-    register_config_schema(name: :golint, schema: RemovedGoToolSchema.config)
-    register_config_schema(name: :go_vet, schema: RemovedGoToolSchema.config)
-    register_config_schema(name: :gometalinter, schema: RemovedGoToolSchema.config)
 
     attr_reader :guid, :working_dir, :config, :shell, :trace_writer, :warnings
 

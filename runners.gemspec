@@ -18,13 +18,14 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/master/CHANGELOG.md"
 
-  spec.files         = Dir["CHANGELOG.md", "LICENSE", "README.md", "analyzers.yml", "exe/*", "lib/runners/**/*.rb", "sig/runners/**/*.rbs"]
+  spec.files         = Dir["CHANGELOG.md", "LICENSE", "README.md", "analyzers.yml", "exe/*", "lib/runners/**/*.{rb,erb}", "sig/runners/**/*.rbs"]
   spec.bindir        = "exe"
   spec.executables   = ["runners"]
   spec.require_paths = ["lib"]
 
   # standard libraries
-  spec.add_dependency "bundler", ">= 2.2.10", "< 2.3.0" # NOTE: It must be same as devon_rex.
+  spec.add_dependency "bundler", ">= 2.2.11", "< 2.3.0" # NOTE: It must be same as devon_rex.
+  spec.add_dependency "erb", ">= 2.2"
   spec.add_dependency "fileutils", ">= 1.5"
   spec.add_dependency "forwardable", ">= 1.3"
   spec.add_dependency "json", ">= 2.5"

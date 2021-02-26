@@ -41,6 +41,22 @@ module Runners
     DEFAULT_TARGET = ".".freeze
     DEFAULT_CONFIG_FILE = (Pathname(Dir.home) / "sider_recommended_haml_lint.yml").to_path.freeze
 
+    def self.config_example
+      <<~'YAML'
+        root_dir: project/
+        gems:
+          - { name: rubocop, version: 1.0.0 }
+        target: [app/, lib/]
+        include_linter:
+          - EmptyScript
+          - MultilinePipe
+        exclude_linter:
+          - TagName
+        config: config/.haml-lint.yml
+        parallel: false
+      YAML
+    end
+
     def analyzer_bin
       "haml-lint"
     end
