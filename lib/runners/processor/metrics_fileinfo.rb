@@ -27,6 +27,8 @@ module Runners
       target_files =
         Dir.glob("**/*",File::FNM_DOTMATCH).select do |path|
           Pathname.new(path).then {|p| p.file? === true && p.fnmatch?("**/.git/*", File::FNM_DOTMATCH) === false}
+          # TODO: investigate steep internal error
+          # See: https://github.com/sider/runners/pull/2100/files#r583428256
         end
 
       analyze_last_committed_at(target_files)
