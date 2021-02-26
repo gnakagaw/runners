@@ -15,7 +15,7 @@ Misc:
 
 - **Flake8** Provide Sider's recommended ruleset [#1980](https://github.com/sider/runners/pull/1980)
 - **PHP_CodeSniffer** Provide Sider's recommended ruleset [#2084](https://github.com/sider/runners/pull/2084)
-- **Metrics FileInfo** Fix a bug([#2066](https://github.com/sider/runners/issues/2066)) and do several refactorings [#2100](https://github.com/sider/runners/pull/2100)
+- **Metrics FileInfo** Modify target file generation [#2100](https://github.com/sider/runners/pull/2100)
 
 ## 0.43.0
 
