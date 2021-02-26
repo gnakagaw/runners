@@ -24,7 +24,11 @@ module Runners
       # You can see the efficacy here: https://github.com/sider/runners/issues/2028#issuecomment-776534408
       capture3!("git", "commit-graph", "write", "--reachable", "--changed-paths", "--no-progress")
 
-      target_files = changes.changed_paths.map(&:to_path)
+      target_files =
+        Dir.glob("**/*",File::FNM_DOTMATCH).select do |path|
+          Pathname.new(path).then {|p| p.file? === true && p.fnmatch?("**/.git/*", File::FNM_DOTMATCH) === false}
+        end
+
       analyze_last_committed_at(target_files)
       analyze_lines_of_code(target_files)
 
