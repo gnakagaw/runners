@@ -29,3 +29,10 @@ Parallel::Stop: Object
 Parallel::VERSION: String
 
 Parallel::Version: String
+module Parallel::ProcessorCount
+  public
+
+  def physical_processor_count: () -> untyped
+
+  def processor_count: () -> untyped
+end
