@@ -27,6 +27,7 @@ Misc:
 - Add `Runners::ConfigGenerator` class [#2029](https://github.com/sider/runners/pull/2029)
 - **Metrics FileInfo** Modify target file generation [#2100](https://github.com/sider/runners/pull/2100)
 - **GolangCI-Lint** Remove `DEFAULT_TARGET` [#2103](https://github.com/sider/runners/pull/2103)
+- **Metrics FileInfo** Bug fix and refactor code [#2122](https://github.com/sider/runners/pull/2122)
 
 ## 0.43.0
 
