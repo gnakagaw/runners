@@ -19,6 +19,7 @@ PATH
       json (>= 2.5)
       jsonseq (>= 0.2)
       open3 (>= 0.1)
+      parallel (>= 1.20)
       psych (>= 3.2)
       retryable (>= 3.0)
       rexml (>= 3.2)
@@ -128,7 +129,6 @@ DEPENDENCIES
   aufgaben!
   lefthook
   minitest
-  parallel
   rainbow
   rake
   rbs
