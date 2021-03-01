@@ -1,0 +1,31 @@
+module Parallel
+  extend Parallel::ProcessorCount
+
+  def self.all?: (*untyped args) { (*untyped) -> untyped } -> untyped
+
+  def self.any?: (*untyped args) { (*untyped) -> untyped } -> untyped
+
+  def self.each: (untyped array, ?untyped options) { (*untyped) -> untyped } -> untyped
+
+  def self.each_with_index: (untyped array, ?untyped options) { (*untyped) -> untyped } -> untyped
+
+  def self.flat_map: (*untyped args) { (*untyped) -> untyped } -> untyped
+
+  def self.in_processes: (?untyped options) { (*untyped) -> untyped } -> untyped
+
+  def self.in_threads: (?untyped options) -> untyped
+
+  def self.map: (untyped source, ?untyped options) { (*untyped) -> untyped } -> untyped
+
+  def self.map_with_index: (untyped array, ?untyped options) { (*untyped) -> untyped } -> untyped
+
+  def self.worker_number: () -> untyped
+
+  def self.worker_number=: (untyped worker_num) -> untyped
+end
+
+Parallel::Stop: Object
+
+Parallel::VERSION: String
+
+Parallel::Version: String
