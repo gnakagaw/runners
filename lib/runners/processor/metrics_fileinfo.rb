@@ -64,7 +64,7 @@ module Runners
     def analyze_lines_of_code(targets)
       text_files = targets.select { |f| text_file?(f) }
       text_files.each_slice(1000) do |files|
-        stdout, _ = capture3!("wc", "-l", *files)
+        stdout, _ = capture3!("wc", "-l", *files, trace_stdout: false)
         lines = stdout.lines(chomp: true)
 
         # `wc` command outputs total count when we pass multiple targets. remove it if exist
