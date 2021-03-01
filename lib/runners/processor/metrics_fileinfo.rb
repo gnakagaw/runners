@@ -25,7 +25,7 @@ module Runners
       capture3!("git", "commit-graph", "write", "--reachable", "--changed-paths", "--no-progress")
 
       target_files = Pathname.glob("**/*", File::FNM_DOTMATCH).filter do |path|
-        path.file? && !path.fnmatch?("**/.git/*", File::FNM_DOTMATCH)
+        path.file? && !path.fnmatch?(".git/*", File::FNM_DOTMATCH) && !path.fnmatch?("*/.git/*", File::FNM_DOTMATCH)
       end
 
       analyze_last_committed_at(target_files)
