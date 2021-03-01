@@ -23,6 +23,7 @@ require "git_diff_parser"
 require "jsonseq"
 require "retryable"
 require "strong_json"
+require "parallel"
 
 # application
 require "runners/version"
