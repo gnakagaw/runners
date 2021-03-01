@@ -85,12 +85,9 @@ module Runners
 
     def analyze_last_committed_at(targets)
       trace_writer.message "Analyzing last commit time..." do
-        results = Parallel.map(targets) do |target|
+        Parallel.each(targets, in_threads: Parallel.processor_count) do |target|
           stdout, _ = capture3!("git", "log", "-1", "--format=format:%aI", "--", target, trace_stdout: false, trace_command_line: false)
-          stdout
-        end
-        targets.each do |target|
-          last_committed_at[target] = results.shift
+          last_committed_at[target] = stdout
         end
       end
     end
