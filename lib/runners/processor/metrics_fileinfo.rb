@@ -62,19 +62,21 @@ module Runners
     end
 
     def analyze_lines_of_code(targets)
-      text_files = targets.select { |f| text_file?(f) }
-      text_files.each_slice(1000) do |files|
-        stdout, _ = capture3!("wc", "-l", *files, trace_stdout: false)
-        lines = stdout.lines(chomp: true)
+      trace_writer.message "Analyzing line of code..." do
+        text_files = targets.select { |f| text_file?(f) }
+        text_files.each_slice(1000) do |files|
+          stdout, _ = capture3!("wc", "-l", *files, trace_stdout: false, trace_command_line: false)
+          lines = stdout.lines(chomp: true)
 
-        # `wc` command outputs total count when we pass multiple targets. remove it if exist
-        lines.pop if lines.last&.match?(/^\d+ total$/)
+          # `wc` command outputs total count when we pass multiple targets. remove it if exist
+          lines.pop if lines.last&.match?(/^\d+ total$/)
 
-        lines.each do |line|
-          fields = line.split(" ")
-          loc = (fields[0] or raise)
-          fname = (fields[1] or raise)
-          lines_of_code[Pathname(fname)] = Integer(loc)
+          lines.each do |line|
+            fields = line.split(" ")
+            loc = (fields[0] or raise)
+            fname = (fields[1] or raise)
+            lines_of_code[Pathname(fname)] = Integer(loc)
+          end
         end
       end
     end
