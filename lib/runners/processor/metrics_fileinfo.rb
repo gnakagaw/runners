@@ -22,7 +22,9 @@ module Runners
       # Generate pre-computed cache for Git metadata access (https://git-scm.com/docs/git-commit-graph)
       # This improves the performance of access to Git metadata for a large repository.
       # You can see the efficacy here: https://github.com/sider/runners/issues/2028#issuecomment-776534408
-      capture3!("git", "commit-graph", "write", "--reachable", "--changed-paths", "--no-progress")
+      trace_writer.message "Generating pre-computed Git metadata cache..." do
+        capture3!("git", "commit-graph", "write", "--reachable", "--changed-paths", trace_stdout: false, trace_command_line: false)
+      end
 
       target_files = Pathname.glob("**/*", File::FNM_DOTMATCH).filter do |path|
         path.file? && !path.fnmatch?(".git/**", File::FNM_DOTMATCH)
@@ -130,7 +132,7 @@ module Runners
     #  * A text file having a non-well-known extension. (e.g. foo.my_original_extension )
     def text_files
       @text_files ||= Set[].tap do |result|
-        stdout, _ = capture3!("git", "ls-files", "--eol", "--error-unmatch", trace_stdout: false)
+        stdout, _ = capture3!("git", "ls-files", "--eol", "--error-unmatch", trace_stdout: false, trace_command_line:false)
         stdout.each_line(chomp: true) do |line|
           fields = line.split(" ")
           type = (fields[1] or raise)
