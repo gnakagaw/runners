@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 [Full diff](https://github.com/sider/runners/compare/0.44.0...HEAD)
 
+Misc:
+
+- **Metrics FileInfo** Refine log message [#2127](https://github.com/sider/runners/pull/2127)
+
 ## 0.44.0
 
 [Full diff](https://github.com/sider/runners/compare/0.43.0...0.44.0)
