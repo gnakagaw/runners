@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Simplify `sider.yml` schema [#2192](https://github.com/sider/runners/pull/2192)
 - Secure `pip install` [#2194](https://github.com/sider/runners/pull/2194)
 - Introduce common option `target` [#2191](https://github.com/sider/runners/pull/2191)
+- Bug fix in `Runners::ConfigGenerator` [#2198](https://github.com/sider/runners/issues/2198)
 
 ## 0.45.0
 
