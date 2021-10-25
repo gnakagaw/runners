@@ -80,7 +80,7 @@ GEM
     parallel (1.20.1)
     parser (3.0.0.0)
       ast (~> 2.4.1)
-    psych (3.3.1)
+    psych (4.0.2)
     rainbow (3.0.0)
     rake (13.0.3)
     rb-fsevent (0.10.4)
