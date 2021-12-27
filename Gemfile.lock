@@ -80,7 +80,8 @@ GEM
     parallel (1.20.1)
     parser (3.0.0.0)
       ast (~> 2.4.1)
-    psych (3.3.1)
+    psych (4.0.3)
+      stringio
     rainbow (3.0.0)
     rake (13.0.3)
     rb-fsevent (0.10.4)
@@ -111,6 +112,7 @@ GEM
       parser (>= 2.7)
       rainbow (>= 2.2.2, < 4.0)
       rbs (~> 1.1.0)
+    stringio (3.0.1)
     strong_json (2.1.2)
     strscan (3.0.0)
     tzinfo (2.0.4)
