@@ -2,7 +2,7 @@
 # NOTE: DO *NOT* EDIT THIS FILE. IT IS GENERATED.
 # PLEASE UPDATE Dockerfile.erb INSTEAD OF THIS FILE.
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-FROM koalaman/shellcheck:v0.7.1 as shellcheck
+FROM koalaman/shellcheck:v0.9.0 as shellcheck
 
 FROM sider/devon_rex_base:2.41.0
 
